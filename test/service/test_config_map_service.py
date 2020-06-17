@@ -206,6 +206,29 @@ class TestConfigMapService(unittest.TestCase):
 
         print_data(values, 'test_stat_config_maps')
 
+    @patch.object(MongoModel, 'connect', return_value=None)
+    def test_stat_config_maps_distinct(self, *args):
+        config_map_vos = ConfigMapFactory.build_batch(10, domain_id=self.domain_id)
+        list(map(lambda vo: vo.save(), config_map_vos))
+
+        params = {
+            'domain_id': self.domain_id,
+            'query': {
+                'distinct': 'name',
+                'page': {
+                    'start': 2,
+                    'limit': 3
+                }
+            }
+        }
+
+        self.transaction.method = 'stat'
+        config_map_svc = ConfigMapService(transaction=self.transaction)
+        values = config_map_svc.stat(params)
+        StatisticsInfo(values)
+
+        print_data(values, 'test_stat_config_maps_distinct')
+
 
 if __name__ == "__main__":
     unittest.main(testRunner=RichTestRunner)
