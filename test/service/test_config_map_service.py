@@ -19,7 +19,7 @@ class TestConfigMapService(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        config.init_conf(service='config')
+        config.init_conf(package='spaceone.config')
         connect('test', host='mongomock://localhost')
 
         cls.domain_id = utils.generate_id('domain')

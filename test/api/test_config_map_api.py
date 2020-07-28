@@ -34,14 +34,16 @@ class _MockConfigMapService(BaseService):
         return ConfigMapFactory.build_batch(10, **params), 10
 
     def stat(self, params):
-        return [{'name': utils.random_string(), 'config_count': 100}]
+        return {
+            'result': [{'name': utils.random_string(), 'config_count': 100}]
+        }
 
 
 class TestConfigMapAPI(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        config.init_conf(service='config')
+        config.init_conf(package='spaceone.config')
         connect('test', host='mongomock://localhost')
         super().setUpClass()
 
@@ -152,7 +154,6 @@ class TestConfigMapAPI(unittest.TestCase):
 
         config_map_servicer = ConfigMap()
         stat_info = config_map_servicer.stat({}, {})
-
         print_message(stat_info, 'test_stat_config_maps')
 
 
