@@ -1,1 +1,2 @@
 from spaceone.config.manager.config_map_manager import ConfigMapManager
+from spaceone.config.manager.domain_config_manager import DomainConfigManager
