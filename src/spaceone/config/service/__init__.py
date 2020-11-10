@@ -1,1 +1,2 @@
 from spaceone.config.service.config_map_service import ConfigMapService
+from spaceone.config.service.domain_config_service import DomainConfigService
