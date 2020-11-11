@@ -1,0 +1,10 @@
+---
+name: garbage_collection.inventory.DELETE
+data:
+  rules:
+    - k: invetory.Server
+      v: 48
+    - k: inventory.Server?provider=aws&data.aws.lifecycle=spot
+      v: 24
+    - k: invetory.CloudService
+      v: 48
