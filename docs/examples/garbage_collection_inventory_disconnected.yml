@@ -1,0 +1,10 @@
+---
+name: garbage_collection.inventory.DISCONNECTED
+data:
+  rules:
+    - k: invetory.Server
+      v: 24
+    - k: inventory.Server?provider=aws&data.aws.lifecycle=spot
+      v: 12
+    - k: invetory.CloudService
+      v: 24
