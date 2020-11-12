@@ -1,13 +1,13 @@
 import factory
 
 from spaceone.core import utils
-from spaceone.config.model.config_map_model import ConfigMap
+from spaceone.config.model.user_config_model import UserConfig
 
 
-class ConfigMapFactory(factory.mongoengine.MongoEngineFactory):
+class UserConfigFactory(factory.mongoengine.MongoEngineFactory):
 
     class Meta:
-        model = ConfigMap
+        model = UserConfig
 
     name = factory.LazyAttribute(lambda o: utils.random_string())
     data = {

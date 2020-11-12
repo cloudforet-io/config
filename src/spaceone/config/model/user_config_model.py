@@ -3,7 +3,7 @@ from mongoengine import *
 from spaceone.core.model.mongo_model import MongoModel
 
 
-class ConfigMap(MongoModel):
+class UserConfig(MongoModel):
     name = StringField(max_length=255, unique_with='domain_id')
     data = DictField()
     tags = DictField()

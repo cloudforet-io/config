@@ -1,8 +1,7 @@
 import logging
-import copy
 
 from spaceone.core.service import *
-from spaceone.config.manager.config_map_manager import ConfigMapManager
+from spaceone.config.manager.user_config_manager import UserConfigManager
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -10,11 +9,11 @@ _LOGGER = logging.getLogger(__name__)
 @authentication_handler
 @authorization_handler
 @event_handler
-class ConfigMapService(BaseService):
+class UserConfigService(BaseService):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.config_map_mgr: ConfigMapManager = self.locator.get_manager('ConfigMapManager')
+        self.user_config_mgr: UserConfigManager = self.locator.get_manager('UserConfigManager')
 
     @transaction
     @check_required(['name', 'data', 'domain_id'])
@@ -30,10 +29,10 @@ class ConfigMapService(BaseService):
             }
 
         Returns:
-            config_map_vo (object)
+            user_config_vo (object)
         """
 
-        return self.config_map_mgr.create_config_map(params)
+        return self.user_config_mgr.create_user_config(params)
 
     @transaction
     @check_required(['name', 'domain_id'])
@@ -49,9 +48,9 @@ class ConfigMapService(BaseService):
             }
 
         Returns:
-            config_map_vo (object)
+            user_config_vo (object)
         """
-        return self.config_map_mgr.update_config_map(params)
+        return self.user_config_mgr.update_user_config(params)
 
     @transaction
     @check_required(['name', 'domain_id'])
@@ -68,7 +67,7 @@ class ConfigMapService(BaseService):
             None
         """
 
-        self.config_map_mgr.delete_config_map(params['name'], params['domain_id'])
+        self.user_config_mgr.delete_user_config(params['name'], params['domain_id'])
 
     @transaction
     @check_required(['name', 'domain_id'])
@@ -83,10 +82,10 @@ class ConfigMapService(BaseService):
             }
 
         Returns:
-            config_map_vo (object)
+            user_config_vo (object)
         """
 
-        return self.config_map_mgr.get_config_map(params['name'], params['domain_id'], params.get('only'))
+        return self.user_config_mgr.get_user_config(params['name'], params['domain_id'], params.get('only'))
 
     @transaction
     @check_required(['domain_id'])
@@ -103,12 +102,12 @@ class ConfigMapService(BaseService):
             }
 
         Returns:
-            config_map_vos (objects)
+            user_config_vos (objects)
             total_count (int)
         """
 
         query = params.get('query', {})
-        return self.config_map_mgr.list_config_maps(query)
+        return self.user_config_mgr.list_user_configs(query)
 
     @transaction
     @check_required(['query', 'domain_id'])
@@ -127,4 +126,4 @@ class ConfigMapService(BaseService):
         """
 
         query = params.get('query', {})
-        return self.config_map_mgr.state_config_maps(query)
+        return self.user_config_mgr.state_user_configs(query)
