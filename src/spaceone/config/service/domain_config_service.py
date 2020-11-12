@@ -1,5 +1,4 @@
 import logging
-import copy
 
 from spaceone.core.service import *
 from spaceone.config.manager.domain_config_manager import DomainConfigManager
