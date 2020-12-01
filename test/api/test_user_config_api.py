@@ -61,9 +61,12 @@ class TestUserConfigAPI(unittest.TestCase):
             'data': {
                 'config_key': 'config_value'
             },
-            'tags': {
-                'tag_key': 'tag_value'
-            },
+            'tags': [
+                {
+                    'key': 'tag_key',
+                    'value': 'tag_value'
+                }
+            ],
             'domain_id': utils.generate_id('domain')
         }
         mock_parse_request.return_value = (params, {})
@@ -72,11 +75,12 @@ class TestUserConfigAPI(unittest.TestCase):
         user_config_info = user_config_servicer.create({}, {})
 
         print_message(user_config_info, 'test_create_user_config')
+        user_config_data = MessageToDict(user_config_info, preserving_proto_field_name=True)
 
         self.assertIsInstance(user_config_info, user_config_pb2.UserConfigInfo)
         self.assertEqual(user_config_info.name, params['name'])
         self.assertDictEqual(MessageToDict(user_config_info.data), params['data'])
-        self.assertDictEqual(MessageToDict(user_config_info.tags), params['tags'])
+        self.assertListEqual(user_config_data['tags'], params['tags'])
         self.assertEqual(user_config_info.domain_id, params['domain_id'])
         self.assertIsNotNone(getattr(user_config_info, 'created_at', None))
 
@@ -89,9 +93,12 @@ class TestUserConfigAPI(unittest.TestCase):
             'data': {
                 'update_config_key': 'update_config_value'
             },
-            'tags': {
-                'update_key': 'update_value'
-            },
+            'tags': [
+                {
+                    'key': 'update_key',
+                    'value': 'update_value'
+                }
+            ],
             'domain_id': utils.generate_id('domain')
         }
         mock_parse_request.return_value = (params, {})
@@ -100,10 +107,11 @@ class TestUserConfigAPI(unittest.TestCase):
         user_config_info = user_config_servicer.update({}, {})
 
         print_message(user_config_info, 'test_update_user_config')
+        user_config_data = MessageToDict(user_config_info, preserving_proto_field_name=True)
 
         self.assertIsInstance(user_config_info, user_config_pb2.UserConfigInfo)
         self.assertDictEqual(MessageToDict(user_config_info.data), params['data'])
-        self.assertDictEqual(MessageToDict(user_config_info.tags), params['tags'])
+        self.assertListEqual(user_config_data['tags'], params['tags'])
 
     @patch.object(BaseAPI, '__init__', return_value=None)
     @patch.object(Locator, 'get_service', return_value=_MockUserConfigService())

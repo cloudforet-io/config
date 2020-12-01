@@ -25,7 +25,7 @@ class DomainConfigService(BaseService):
                 'name': 'str',
                 'data': 'dict',
                 'schema': 'str',
-                'tags': 'dict',
+                'tags': 'list',
                 'domain_id': 'str'
             }
 
@@ -45,7 +45,7 @@ class DomainConfigService(BaseService):
                 'name': 'str',
                 'data': 'dict',
                 'schema': 'str',
-                'tags': 'dict',
+                'tags': 'list',
                 'domain_id': 'str'
             }
 
@@ -92,6 +92,7 @@ class DomainConfigService(BaseService):
     @transaction
     @check_required(['domain_id'])
     @append_query_filter(['name', 'domain_id'])
+    @change_tag_filter('tags')
     @append_keyword_filter(['name'])
     def list(self, params):
         """ List config maps
@@ -114,6 +115,7 @@ class DomainConfigService(BaseService):
     @transaction
     @check_required(['query', 'domain_id'])
     @append_query_filter(['domain_id'])
+    @append_keyword_filter(['name'])
     def stat(self, params):
         """
         Args:

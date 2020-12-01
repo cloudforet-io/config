@@ -48,9 +48,12 @@ class TestUserConfigService(unittest.TestCase):
             'data': {
                 'key': 'value'
             },
-            'tags': {
-                'key': 'value'
-            },
+            'tags': [
+                {
+                    'key': 'tag_key',
+                    'value': 'tag_value'
+                }
+            ],
             'domain_id': utils.generate_id('domain')
         }
 
@@ -64,7 +67,7 @@ class TestUserConfigService(unittest.TestCase):
         self.assertIsInstance(user_config_vo, UserConfig)
         self.assertEqual(params['name'], user_config_vo.name)
         self.assertEqual(params['data'], user_config_vo.data)
-        self.assertEqual(params.get('tags', {}), user_config_vo.tags)
+        self.assertEqual(params.get('tags', {}), user_config_vo.to_dict()['tags'])
         self.assertEqual(params['domain_id'], user_config_vo.domain_id)
 
     @patch.object(MongoModel, 'connect', return_value=None)
@@ -76,9 +79,12 @@ class TestUserConfigService(unittest.TestCase):
             'data': {
                 'update_data_key': 'update_data_value'
             },
-            'tags': {
-                'update_key': 'update_value'
-            },
+            'tags': [
+                {
+                    'key': 'update_key',
+                    'value': 'update_value'
+                }
+            ],
             'domain_id': self.domain_id
         }
 
@@ -91,7 +97,7 @@ class TestUserConfigService(unittest.TestCase):
 
         self.assertIsInstance(user_config_vo, UserConfig)
         self.assertEqual(params['data'], user_config_vo.data)
-        self.assertEqual(params.get('tags', {}), user_config_vo.tags)
+        self.assertEqual(params.get('tags', {}), user_config_vo.to_dict()['tags'])
         self.assertEqual(params['domain_id'], user_config_vo.domain_id)
 
     @patch.object(MongoModel, 'connect', return_value=None)
@@ -148,15 +154,15 @@ class TestUserConfigService(unittest.TestCase):
 
     @patch.object(MongoModel, 'connect', return_value=None)
     def test_list_user_configs_by_tag(self, *args):
-        UserConfigFactory(tags={'tag_key': 'tag_value'}, domain_id=self.domain_id)
+        UserConfigFactory(tags=[{'key': 'tag_key_1', 'value': 'tag_value_1'}], domain_id=self.domain_id)
         user_config_vos = UserConfigFactory.build_batch(9, domain_id=self.domain_id)
         list(map(lambda vo: vo.save(), user_config_vos))
 
         params = {
             'query': {
                 'filter': [{
-                    'k': 'tags.tag_key',
-                    'v': 'tag_value',
+                    'k': 'tags.tag_key_1',
+                    'v': 'tag_value_1',
                     'o': 'eq'
                 }]
             },
