@@ -16,8 +16,11 @@ class UserConfigFactory(factory.mongoengine.MongoEngineFactory):
             'key3': 'value3'
         }
     }
-    tags = {
-        'key': 'value'
-    }
+    tags = [
+        {
+            'key': 'tag_key',
+            'value': 'tag_value'
+        }
+    ]
     domain_id = utils.generate_id('domain')
     created_at = factory.Faker('date_time')
