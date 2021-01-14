@@ -21,9 +21,6 @@ class UserConfig(MongoModel):
             'data',
             'tags'
         ],
-        'exact_fields': [
-            'domain_id'
-        ],
         'minimal_fields': [
             'name'
         ],
@@ -34,5 +31,6 @@ class UserConfig(MongoModel):
             'name',
             'domain_id',
             ('tags.key', 'tags.value')
-        ]
+        ],
+        'auto_create_index': False
     }
