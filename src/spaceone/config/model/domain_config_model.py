@@ -23,9 +23,6 @@ class DomainConfig(MongoModel):
             'schema',
             'tags'
         ],
-        'exact_fields': [
-            'domain_id'
-        ],
         'minimal_fields': [
             'name'
         ],
@@ -36,5 +33,6 @@ class DomainConfig(MongoModel):
             'name',
             'domain_id',
             ('tags.key', 'tags.value')
-        ]
+        ],
+        'auto_create_index': False
     }
