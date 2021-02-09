@@ -186,7 +186,7 @@ class TestUserConfigService(unittest.TestCase):
         params = {
             'domain_id': self.domain_id,
             'query': {
-                'aggregate': {
+                'aggregate': [{
                     'group': {
                         'keys': [{
                             'key': 'name',
@@ -197,11 +197,12 @@ class TestUserConfigService(unittest.TestCase):
                             'name': 'Count'
                         }]
                     }
-                },
-                'sort': {
-                    'name': 'Count',
-                    'desc': True
-                }
+                }, {
+                    'sort': {
+                        'key': 'Count',
+                        'desc': True
+                    }
+                }]
             }
         }
 
