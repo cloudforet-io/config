@@ -8,8 +8,7 @@ worker: false
 name: config
 replicas: 1
 image:
-    repository: spaceone
-    name: config
+    name: spaceone/config
     version: latest
 imagePullPolicy: IfNotPresent
 
