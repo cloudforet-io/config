@@ -48,12 +48,9 @@ class TestUserConfigService(unittest.TestCase):
             'data': {
                 'key': 'value'
             },
-            'tags': [
-                {
-                    'key': 'tag_key',
-                    'value': 'tag_value'
-                }
-            ],
+            'tags': {
+                utils.random_string(): utils.random_string()
+            },
             'domain_id': utils.generate_id('domain')
         }
 
@@ -67,7 +64,7 @@ class TestUserConfigService(unittest.TestCase):
         self.assertIsInstance(user_config_vo, UserConfig)
         self.assertEqual(params['name'], user_config_vo.name)
         self.assertEqual(params['data'], user_config_vo.data)
-        self.assertEqual(params.get('tags', {}), user_config_vo.to_dict()['tags'])
+        self.assertEqual(params['tags'], utils.tags_to_dict(user_config_vo.tags))
         self.assertEqual(params['domain_id'], user_config_vo.domain_id)
 
     @patch.object(MongoModel, 'connect', return_value=None)
@@ -79,12 +76,9 @@ class TestUserConfigService(unittest.TestCase):
             'data': {
                 'update_data_key': 'update_data_value'
             },
-            'tags': [
-                {
-                    'key': 'update_key',
-                    'value': 'update_value'
-                }
-            ],
+            'tags': {
+                'update_key': 'update_value'
+            },
             'domain_id': self.domain_id
         }
 
@@ -97,7 +91,7 @@ class TestUserConfigService(unittest.TestCase):
 
         self.assertIsInstance(user_config_vo, UserConfig)
         self.assertEqual(params['data'], user_config_vo.data)
-        self.assertEqual(params.get('tags', {}), user_config_vo.to_dict()['tags'])
+        self.assertEqual(params['tags'], utils.tags_to_dict(user_config_vo.tags))
         self.assertEqual(params['domain_id'], user_config_vo.domain_id)
 
     @patch.object(MongoModel, 'connect', return_value=None)

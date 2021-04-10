@@ -1,6 +1,7 @@
 import logging
 
 from spaceone.core.service import *
+from spaceone.core import utils
 from spaceone.config.manager.user_config_manager import UserConfigManager
 
 _LOGGER = logging.getLogger(__name__)
@@ -24,13 +25,16 @@ class UserConfigService(BaseService):
             params (dict): {
                 'name': 'str',
                 'data': 'dict',
-                'tags': 'list',
+                'tags': 'dict',
                 'domain_id': 'str'
             }
 
         Returns:
             user_config_vo (object)
         """
+
+        if 'tags' in params:
+            params['tags'] = utils.dict_to_tags(params['tags'])
 
         return self.user_config_mgr.create_user_config(params)
 
@@ -43,13 +47,17 @@ class UserConfigService(BaseService):
             params (dict): {
                 'name': 'str',
                 'data': 'dict',
-                'tags': 'list',
+                'tags': 'dict',
                 'domain_id': 'str'
             }
 
         Returns:
             user_config_vo (object)
         """
+
+        if 'tags' in params:
+            params['tags'] = utils.dict_to_tags(params['tags'])
+
         return self.user_config_mgr.update_user_config(params)
 
     @transaction(append_meta={'authorization.scope': 'DOMAIN'})

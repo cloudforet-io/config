@@ -1,4 +1,5 @@
 import unittest
+import copy
 from unittest.mock import patch
 from mongoengine import connect, disconnect
 from google.protobuf.json_format import MessageToDict
@@ -19,9 +20,18 @@ from test.factory.user_config_factory import UserConfigFactory
 class _MockUserConfigService(BaseService):
 
     def create(self, params):
+        params = copy.deepcopy(params)
+        if 'tags' in params:
+            params['tags'] = utils.dict_to_tags(params['tags'])
+
         return UserConfigFactory(**params)
 
     def update(self, params):
+
+        params = copy.deepcopy(params)
+        if 'tags' in params:
+            params['tags'] = utils.dict_to_tags(params['tags'])
+
         return UserConfigFactory(**params)
 
     def delete(self, params):
@@ -61,12 +71,9 @@ class TestUserConfigAPI(unittest.TestCase):
             'data': {
                 'config_key': 'config_value'
             },
-            'tags': [
-                {
-                    'key': 'tag_key',
-                    'value': 'tag_value'
-                }
-            ],
+            'tags': {
+                utils.random_string(): utils.random_string()
+            },
             'domain_id': utils.generate_id('domain')
         }
         mock_parse_request.return_value = (params, {})
@@ -80,7 +87,7 @@ class TestUserConfigAPI(unittest.TestCase):
         self.assertIsInstance(user_config_info, user_config_pb2.UserConfigInfo)
         self.assertEqual(user_config_info.name, params['name'])
         self.assertDictEqual(MessageToDict(user_config_info.data), params['data'])
-        self.assertListEqual(user_config_data['tags'], params['tags'])
+        self.assertDictEqual(user_config_data['tags'], params['tags'])
         self.assertEqual(user_config_info.domain_id, params['domain_id'])
         self.assertIsNotNone(getattr(user_config_info, 'created_at', None))
 
@@ -93,12 +100,9 @@ class TestUserConfigAPI(unittest.TestCase):
             'data': {
                 'update_config_key': 'update_config_value'
             },
-            'tags': [
-                {
-                    'key': 'update_key',
-                    'value': 'update_value'
-                }
-            ],
+            'tags': {
+                'update_key': 'update_value'
+            },
             'domain_id': utils.generate_id('domain')
         }
         mock_parse_request.return_value = (params, {})
@@ -111,7 +115,7 @@ class TestUserConfigAPI(unittest.TestCase):
 
         self.assertIsInstance(user_config_info, user_config_pb2.UserConfigInfo)
         self.assertDictEqual(MessageToDict(user_config_info.data), params['data'])
-        self.assertListEqual(user_config_data['tags'], params['tags'])
+        self.assertDictEqual(user_config_data['tags'], params['tags'])
 
     @patch.object(BaseAPI, '__init__', return_value=None)
     @patch.object(Locator, 'get_service', return_value=_MockUserConfigService())
