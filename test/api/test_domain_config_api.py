@@ -1,4 +1,5 @@
 import unittest
+import copy
 from unittest.mock import patch
 from mongoengine import connect, disconnect
 from google.protobuf.json_format import MessageToDict
@@ -19,9 +20,17 @@ from test.factory.domain_config_factory import DomainConfigFactory
 class _MockDomainConfigService(BaseService):
 
     def create(self, params):
+        params = copy.deepcopy(params)
+        if 'tags' in params:
+            params['tags'] = utils.dict_to_tags(params['tags'])
+
         return DomainConfigFactory(**params)
 
     def update(self, params):
+        params = copy.deepcopy(params)
+        if 'tags' in params:
+            params['tags'] = utils.dict_to_tags(params['tags'])
+
         return DomainConfigFactory(**params)
 
     def delete(self, params):
@@ -62,12 +71,9 @@ class TestDomainConfigAPI(unittest.TestCase):
                 'config_key': 'config_value'
             },
             'schema': utils.random_string(),
-            'tags': [
-                {
-                    'key': 'tag_key',
-                    'value': 'tag_value'
-                }
-            ],
+            'tags': {
+                utils.random_string(): utils.random_string()
+            },
             'domain_id': utils.generate_id('domain')
         }
         mock_parse_request.return_value = (params, {})
@@ -81,7 +87,7 @@ class TestDomainConfigAPI(unittest.TestCase):
         self.assertIsInstance(domain_config_info, domain_config_pb2.DomainConfigInfo)
         self.assertEqual(domain_config_info.name, params['name'])
         self.assertDictEqual(MessageToDict(domain_config_info.data), params['data'])
-        self.assertListEqual(domain_config_data['tags'], params['tags'])
+        self.assertDictEqual(domain_config_data['tags'], params['tags'])
         self.assertEqual(domain_config_info.domain_id, params['domain_id'])
         self.assertIsNotNone(getattr(domain_config_info, 'created_at', None))
 
@@ -95,12 +101,9 @@ class TestDomainConfigAPI(unittest.TestCase):
                 'update_config_key': 'update_config_value'
             },
             'schema': utils.random_string(),
-            'tags': [
-                {
-                    'key': 'update_key',
-                    'value': 'update_value'
-                }
-            ],
+            'tags': {
+                'update_key': 'update_value'
+            },
             'domain_id': utils.generate_id('domain')
         }
         mock_parse_request.return_value = (params, {})
@@ -113,7 +116,7 @@ class TestDomainConfigAPI(unittest.TestCase):
 
         self.assertIsInstance(domain_config_info, domain_config_pb2.DomainConfigInfo)
         self.assertDictEqual(MessageToDict(domain_config_info.data), params['data'])
-        self.assertListEqual(domain_config_data['tags'], params['tags'])
+        self.assertDictEqual(domain_config_data['tags'], params['tags'])
 
     @patch.object(BaseAPI, '__init__', return_value=None)
     @patch.object(Locator, 'get_service', return_value=_MockDomainConfigService())

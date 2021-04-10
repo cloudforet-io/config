@@ -1,7 +1,7 @@
 import functools
-from spaceone.api.core.v1 import tag_pb2
 from spaceone.api.config.v1 import user_config_pb2
 from spaceone.core.pygrpc.message_type import *
+from spaceone.core import utils
 from spaceone.config.model.user_config_model import UserConfig
 
 __all__ = ['UserConfigInfo', 'UserConfigsInfo']
@@ -15,9 +15,9 @@ def UserConfigInfo(user_config_vo: UserConfig, minimal=False):
     if not minimal:
         info.update({
             'data': change_struct_type(user_config_vo.data),
-            'tags': [tag_pb2.Tag(key=tag.key, value=tag.value) for tag in user_config_vo.tags],
+            'tags': change_struct_type(utils.tags_to_dict(user_config_vo.tags)),
             'domain_id': user_config_vo.domain_id,
-            'created_at': change_timestamp_type(user_config_vo.created_at)
+            'created_at': utils.datetime_to_iso8601(user_config_vo.created_at)
         })
 
     return user_config_pb2.UserConfigInfo(**info)

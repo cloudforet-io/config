@@ -1,6 +1,7 @@
 import logging
 
 from spaceone.core.service import *
+from spaceone.core import utils
 from spaceone.config.manager.domain_config_manager import DomainConfigManager
 
 _LOGGER = logging.getLogger(__name__)
@@ -25,13 +26,16 @@ class DomainConfigService(BaseService):
                 'name': 'str',
                 'data': 'dict',
                 'schema': 'str',
-                'tags': 'list',
+                'tags': 'dict',
                 'domain_id': 'str'
             }
 
         Returns:
             domain_config_vo (object)
         """
+
+        if 'tags' in params:
+            params['tags'] = utils.dict_to_tags(params['tags'])
 
         return self.domain_config_mgr.create_domain_config(params)
 
@@ -45,13 +49,17 @@ class DomainConfigService(BaseService):
                 'name': 'str',
                 'data': 'dict',
                 'schema': 'str',
-                'tags': 'list',
+                'tags': 'dict',
                 'domain_id': 'str'
             }
 
         Returns:
             domain_config_vo (object)
         """
+
+        if 'tags' in params:
+            params['tags'] = utils.dict_to_tags(params['tags'])
+
         return self.domain_config_mgr.update_domain_config(params)
 
     @transaction(append_meta={'authorization.scope': 'DOMAIN'})
