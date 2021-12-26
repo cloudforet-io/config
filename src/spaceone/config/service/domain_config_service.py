@@ -26,7 +26,6 @@ class DomainConfigService(BaseService):
             params (dict): {
                 'name': 'str',
                 'data': 'dict',
-                'schema': 'str',
                 'tags': 'dict',
                 'domain_id': 'str'
             }
@@ -49,7 +48,6 @@ class DomainConfigService(BaseService):
             params (dict): {
                 'name': 'str',
                 'data': 'dict',
-                'schema': 'str',
                 'tags': 'dict',
                 'domain_id': 'str'
             }

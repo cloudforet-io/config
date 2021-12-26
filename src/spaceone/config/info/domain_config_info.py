@@ -16,7 +16,6 @@ def DomainConfigInfo(domain_config_vo: DomainConfig, minimal=False):
         info.update({
             'data': change_struct_type(domain_config_vo.data),
             'tags': change_struct_type(utils.tags_to_dict(domain_config_vo.tags)),
-            'schema': domain_config_vo.schema,
             'domain_id': domain_config_vo.domain_id,
             'created_at': utils.datetime_to_iso8601(domain_config_vo.created_at)
         })

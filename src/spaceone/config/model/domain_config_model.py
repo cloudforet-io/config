@@ -11,16 +11,14 @@ class DomainConfigTag(EmbeddedDocument):
 class DomainConfig(MongoModel):
     name = StringField(max_length=255, unique_with='domain_id')
     data = DictField()
-    schema = StringField(max_length=64)
     tags = ListField(EmbeddedDocumentField(DomainConfigTag))
-    domain_id = StringField(max_length=255)
+    domain_id = StringField(max_length=40)
     created_at = DateTimeField(auto_now_add=True)
 
     meta = {
         'updatable_fields': [
             'name',
             'data',
-            'schema',
             'tags'
         ],
         'minimal_fields': [

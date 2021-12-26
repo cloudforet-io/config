@@ -12,7 +12,8 @@ class UserConfig(MongoModel):
     name = StringField(max_length=255, unique_with='domain_id')
     data = DictField()
     tags = ListField(EmbeddedDocumentField(UserConfigTag))
-    domain_id = StringField(max_length=255)
+    user_id = StringField(max_length=40, default=None, null=True)
+    domain_id = StringField(max_length=40)
     created_at = DateTimeField(auto_now_add=True)
 
     meta = {
@@ -24,11 +25,15 @@ class UserConfig(MongoModel):
         'minimal_fields': [
             'name'
         ],
+        'change_query_keys': {
+            'user_self': 'user_id'
+        },
         'ordering': [
             'name'
         ],
         'indexes': [
             'name',
+            'user_id',
             'domain_id',
             ('tags.key', 'tags.value')
         ]
