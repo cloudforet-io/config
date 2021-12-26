@@ -16,6 +16,7 @@ def UserConfigInfo(user_config_vo: UserConfig, minimal=False):
         info.update({
             'data': change_struct_type(user_config_vo.data),
             'tags': change_struct_type(utils.tags_to_dict(user_config_vo.tags)),
+            'user_id': user_config_vo.user_id,
             'domain_id': user_config_vo.domain_id,
             'created_at': utils.datetime_to_iso8601(user_config_vo.created_at)
         })
