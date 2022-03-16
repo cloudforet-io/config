@@ -14,12 +14,14 @@ class DomainConfig(MongoModel):
     tags = ListField(EmbeddedDocumentField(DomainConfigTag))
     domain_id = StringField(max_length=40)
     created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
 
     meta = {
         'updatable_fields': [
             'name',
             'data',
-            'tags'
+            'tags',
+            'updated_at'
         ],
         'minimal_fields': [
             'name'

@@ -19,6 +19,12 @@ class UserConfig(BaseAPI, user_config_pb2_grpc.UserConfigServicer):
         with self.locator.get_service('UserConfigService', metadata) as user_config_service:
             return self.locator.get_info('UserConfigInfo', user_config_service.update(params))
 
+    def set(self, request, context):
+        params, metadata = self.parse_request(request, context)
+
+        with self.locator.get_service('UserConfigService', metadata) as user_config_service:
+            return self.locator.get_info('UserConfigInfo', user_config_service.set(params))
+
     def delete(self, request, context):
         params, metadata = self.parse_request(request, context)
 

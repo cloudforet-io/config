@@ -33,6 +33,13 @@ class _MockDomainConfigService(BaseService):
 
         return DomainConfigFactory(**params)
 
+    def set(self, params):
+        params = copy.deepcopy(params)
+        if 'tags' in params:
+            params['tags'] = utils.dict_to_tags(params['tags'])
+
+        return DomainConfigFactory(**params)
+
     def delete(self, params):
         pass
 
@@ -70,7 +77,6 @@ class TestDomainConfigAPI(unittest.TestCase):
             'data': {
                 'config_key': 'config_value'
             },
-            'schema': utils.random_string(),
             'tags': {
                 utils.random_string(): utils.random_string()
             },
@@ -90,6 +96,7 @@ class TestDomainConfigAPI(unittest.TestCase):
         self.assertDictEqual(domain_config_data['tags'], params['tags'])
         self.assertEqual(domain_config_info.domain_id, params['domain_id'])
         self.assertIsNotNone(getattr(domain_config_info, 'created_at', None))
+        self.assertIsNotNone(getattr(domain_config_info, 'updated_at', None))
 
     @patch.object(BaseAPI, '__init__', return_value=None)
     @patch.object(Locator, 'get_service', return_value=_MockDomainConfigService())
@@ -100,7 +107,6 @@ class TestDomainConfigAPI(unittest.TestCase):
             'data': {
                 'update_config_key': 'update_config_value'
             },
-            'schema': utils.random_string(),
             'tags': {
                 'update_key': 'update_value'
             },
@@ -117,6 +123,36 @@ class TestDomainConfigAPI(unittest.TestCase):
         self.assertIsInstance(domain_config_info, domain_config_pb2.DomainConfigInfo)
         self.assertDictEqual(MessageToDict(domain_config_info.data), params['data'])
         self.assertDictEqual(domain_config_data['tags'], params['tags'])
+
+    @patch.object(BaseAPI, '__init__', return_value=None)
+    @patch.object(Locator, 'get_service', return_value=_MockDomainConfigService())
+    @patch.object(BaseAPI, 'parse_request')
+    def test_set_domain_config(self, mock_parse_request, *args):
+        params = {
+            'name': utils.random_string(),
+            'data': {
+                'config_key': 'config_value'
+            },
+            'tags': {
+                utils.random_string(): utils.random_string()
+            },
+            'domain_id': utils.generate_id('domain')
+        }
+        mock_parse_request.return_value = (params, {})
+
+        domain_config_servicer = DomainConfig()
+        domain_config_info = domain_config_servicer.set({}, {})
+
+        print_message(domain_config_info, 'test_set_domain_config')
+        domain_config_data = MessageToDict(domain_config_info, preserving_proto_field_name=True)
+
+        self.assertIsInstance(domain_config_info, domain_config_pb2.DomainConfigInfo)
+        self.assertEqual(domain_config_info.name, params['name'])
+        self.assertDictEqual(MessageToDict(domain_config_info.data), params['data'])
+        self.assertDictEqual(domain_config_data['tags'], params['tags'])
+        self.assertEqual(domain_config_info.domain_id, params['domain_id'])
+        self.assertIsNotNone(getattr(domain_config_info, 'created_at', None))
+        self.assertIsNotNone(getattr(domain_config_info, 'updated_at', None))
 
     @patch.object(BaseAPI, '__init__', return_value=None)
     @patch.object(Locator, 'get_service', return_value=_MockDomainConfigService())

@@ -16,7 +16,6 @@ class DomainConfigFactory(factory.mongoengine.MongoEngineFactory):
             'key3': 'value3'
         }
     }
-    schema = factory.LazyAttribute(lambda o: utils.random_string())
     tags = [
         {
             'key': 'tag_key',
@@ -24,4 +23,5 @@ class DomainConfigFactory(factory.mongoengine.MongoEngineFactory):
         }
     ]
     domain_id = utils.generate_id('domain')
+    updated_at = factory.Faker('date_time')
     created_at = factory.Faker('date_time')

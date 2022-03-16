@@ -19,6 +19,12 @@ class DomainConfig(BaseAPI, domain_config_pb2_grpc.DomainConfigServicer):
         with self.locator.get_service('DomainConfigService', metadata) as domain_config_service:
             return self.locator.get_info('DomainConfigInfo', domain_config_service.update(params))
 
+    def set(self, request, context):
+        params, metadata = self.parse_request(request, context)
+
+        with self.locator.get_service('DomainConfigService', metadata) as domain_config_service:
+            return self.locator.get_info('DomainConfigInfo', domain_config_service.set(params))
+
     def delete(self, request, context):
         params, metadata = self.parse_request(request, context)
 

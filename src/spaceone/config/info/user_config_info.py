@@ -18,6 +18,7 @@ def UserConfigInfo(user_config_vo: UserConfig, minimal=False):
             'tags': change_struct_type(utils.tags_to_dict(user_config_vo.tags)),
             'user_id': user_config_vo.user_id,
             'domain_id': user_config_vo.domain_id,
+            'updated_at': utils.datetime_to_iso8601(user_config_vo.updated_at),
             'created_at': utils.datetime_to_iso8601(user_config_vo.created_at)
         })
 

@@ -2,6 +2,7 @@ import logging
 
 from spaceone.core.service import *
 from spaceone.core import utils
+from spaceone.core.error import *
 from spaceone.config.manager.user_config_manager import UserConfigManager
 
 _LOGGER = logging.getLogger(__name__)
@@ -20,7 +21,7 @@ class UserConfigService(BaseService):
     @transaction(append_meta={'authorization.scope': 'USER'})
     @check_required(['name', 'data', 'domain_id'])
     def create(self, params):
-        """Create config map
+        """Create user config
 
         Args:
             params (dict): {
@@ -35,8 +36,10 @@ class UserConfigService(BaseService):
         """
 
         user_type = self.transaction.get_meta('authorization.user_type')
-        if user_type != 'DOMAIN_OWNER':
-            params['user_id'] = self.transaction.get_meta('user_id')
+        if user_type == 'DOMAIN_OWNER':
+            raise ERROR_PERMISSION_DENIED()
+
+        params['user_id'] = self.transaction.get_meta('user_id')
 
         if 'tags' in params:
             params['tags'] = utils.dict_to_tags(params['tags'])
@@ -46,7 +49,7 @@ class UserConfigService(BaseService):
     @transaction(append_meta={'authorization.scope': 'USER'})
     @check_required(['name', 'domain_id'])
     def update(self, params):
-        """Update config map
+        """Update user config
 
         Args:
             params (dict): {
@@ -66,9 +69,45 @@ class UserConfigService(BaseService):
         return self.user_config_mgr.update_user_config(params)
 
     @transaction(append_meta={'authorization.scope': 'USER'})
+    @check_required(['name', 'data', 'domain_id'])
+    def set(self, params):
+        """Set user config (create or update)
+
+        Args:
+            params (dict): {
+                'name': 'str',
+                'data': 'dict',
+                'tags': 'dict',
+                'domain_id': 'str'
+            }
+
+        Returns:
+            user_config_vo (object)
+        """
+
+        domain_id = params['domain_id']
+
+        user_type = self.transaction.get_meta('authorization.user_type')
+        if user_type == 'DOMAIN_OWNER':
+            raise ERROR_PERMISSION_DENIED()
+
+        params['user_id'] = self.transaction.get_meta('user_id')
+        user_id = params['user_id']
+
+        if 'tags' in params:
+            params['tags'] = utils.dict_to_tags(params['tags'])
+
+        user_config_vos = self.user_config_mgr.filter_user_configs(domain_id=domain_id, user_id=user_id)
+
+        if user_config_vos.count() == 0:
+            return self.user_config_mgr.create_user_config(params)
+        else:
+            return self.user_config_mgr.update_user_config_by_vo(params, user_config_vos[0])
+
+    @transaction(append_meta={'authorization.scope': 'USER'})
     @check_required(['name', 'domain_id'])
     def delete(self, params):
-        """Delete config map
+        """Delete user config
 
         Args:
             params (dict): {
@@ -85,7 +124,7 @@ class UserConfigService(BaseService):
     @transaction(append_meta={'authorization.scope': 'USER'})
     @check_required(['name', 'domain_id'])
     def get(self, params):
-        """Get config map
+        """Get user config
 
         Args:
             params (dict): {
@@ -109,7 +148,7 @@ class UserConfigService(BaseService):
     @change_tag_filter('tags')
     @append_keyword_filter(['name'])
     def list(self, params):
-        """ List config maps
+        """ List user configs
 
         Args:
             params (dict): {

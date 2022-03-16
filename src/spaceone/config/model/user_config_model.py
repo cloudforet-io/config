@@ -15,12 +15,14 @@ class UserConfig(MongoModel):
     user_id = StringField(max_length=40, default=None, null=True)
     domain_id = StringField(max_length=40)
     created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
 
     meta = {
         'updatable_fields': [
             'name',
             'data',
-            'tags'
+            'tags',
+            'updated_at'
         ],
         'minimal_fields': [
             'name'

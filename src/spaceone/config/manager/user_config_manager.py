@@ -43,6 +43,9 @@ class UserConfigManager(BaseManager):
     def get_user_config(self, name, domain_id, only=None):
         return self.user_config_model.get(name=name, domain_id=domain_id, only=only)
 
+    def filter_user_configs(self, **conditions):
+        return self.user_config_model.filter(**conditions)
+
     def list_user_configs(self, query={}):
         return self.user_config_model.query(**query)
 
