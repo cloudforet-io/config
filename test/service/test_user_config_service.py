@@ -95,6 +95,32 @@ class TestUserConfigService(unittest.TestCase):
         self.assertEqual(params['domain_id'], user_config_vo.domain_id)
 
     @patch.object(MongoModel, 'connect', return_value=None)
+    def test_set_user_config(self, *args):
+        params = {
+            'name': 'inventory.server.metadata.view.table.layout',
+            'data': {
+                'key': 'value'
+            },
+            'tags': {
+                utils.random_string(): utils.random_string()
+            },
+            'domain_id': utils.generate_id('domain')
+        }
+
+        self.transaction.method = 'set'
+        user_config_svc = UserConfigService(transaction=self.transaction)
+        user_config_vo = user_config_svc.create(params.copy())
+
+        print_data(user_config_vo.to_dict(), 'test_set_user_config')
+        UserConfigInfo(user_config_vo)
+
+        self.assertIsInstance(user_config_vo, UserConfig)
+        self.assertEqual(params['name'], user_config_vo.name)
+        self.assertEqual(params['data'], user_config_vo.data)
+        self.assertEqual(params['tags'], utils.tags_to_dict(user_config_vo.tags))
+        self.assertEqual(params['domain_id'], user_config_vo.domain_id)
+
+    @patch.object(MongoModel, 'connect', return_value=None)
     def test_delete_user_config(self, *args):
         new_user_config_vo = UserConfigFactory(domain_id=self.domain_id)
 

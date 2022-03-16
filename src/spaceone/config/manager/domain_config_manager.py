@@ -43,6 +43,9 @@ class DomainConfigManager(BaseManager):
     def get_domain_config(self, name, domain_id, only=None):
         return self.domain_config_model.get(name=name, domain_id=domain_id, only=only)
 
+    def filter_domain_configs(self, **conditions):
+        return self.domain_config_model.filter(**conditions)
+
     def list_domain_configs(self, query={}):
         return self.domain_config_model.query(**query)
 

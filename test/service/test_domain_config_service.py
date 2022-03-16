@@ -48,7 +48,6 @@ class TestDomainConfigService(unittest.TestCase):
             'data': {
                 'key': 'value'
             },
-            'schema': 'test_schema',
             'tags': {
                 utils.random_string(): utils.random_string()
             },
@@ -65,7 +64,6 @@ class TestDomainConfigService(unittest.TestCase):
         self.assertIsInstance(domain_config_vo, DomainConfig)
         self.assertEqual(params['name'], domain_config_vo.name)
         self.assertEqual(params['data'], domain_config_vo.data)
-        self.assertEqual(params['schema'], domain_config_vo.schema)
         self.assertEqual(params['tags'], utils.tags_to_dict(domain_config_vo.tags))
         self.assertEqual(params['domain_id'], domain_config_vo.domain_id)
 
@@ -78,7 +76,6 @@ class TestDomainConfigService(unittest.TestCase):
             'data': {
                 'update_data_key': 'update_data_value'
             },
-            'schema': 'update_schema',
             'tags': {
                 'update_key': 'update_value'
             },
@@ -94,7 +91,32 @@ class TestDomainConfigService(unittest.TestCase):
 
         self.assertIsInstance(domain_config_vo, DomainConfig)
         self.assertEqual(params['data'], domain_config_vo.data)
-        self.assertEqual(params['schema'], domain_config_vo.schema)
+        self.assertEqual(params['tags'], utils.tags_to_dict(domain_config_vo.tags))
+        self.assertEqual(params['domain_id'], domain_config_vo.domain_id)
+
+    @patch.object(MongoModel, 'connect', return_value=None)
+    def test_set_domain_config(self, *args):
+        params = {
+            'name': 'inventory.server.metadata.view.table.layout',
+            'data': {
+                'key': 'value'
+            },
+            'tags': {
+                utils.random_string(): utils.random_string()
+            },
+            'domain_id': utils.generate_id('domain')
+        }
+
+        self.transaction.method = 'set'
+        domain_config_svc = DomainConfigService(transaction=self.transaction)
+        domain_config_vo = domain_config_svc.create(params.copy())
+
+        print_data(domain_config_vo.to_dict(), 'test_set_domain_config')
+        DomainConfigInfo(domain_config_vo)
+
+        self.assertIsInstance(domain_config_vo, DomainConfig)
+        self.assertEqual(params['name'], domain_config_vo.name)
+        self.assertEqual(params['data'], domain_config_vo.data)
         self.assertEqual(params['tags'], utils.tags_to_dict(domain_config_vo.tags))
         self.assertEqual(params['domain_id'], domain_config_vo.domain_id)
 

@@ -23,4 +23,5 @@ class UserConfigFactory(factory.mongoengine.MongoEngineFactory):
         }
     ]
     domain_id = utils.generate_id('domain')
+    updated_at = factory.Faker('date_time')
     created_at = factory.Faker('date_time')

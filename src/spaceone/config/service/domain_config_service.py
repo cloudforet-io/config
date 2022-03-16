@@ -20,7 +20,7 @@ class DomainConfigService(BaseService):
     @transaction(append_meta={'authorization.scope': 'DOMAIN'})
     @check_required(['name', 'data', 'domain_id'])
     def create(self, params):
-        """Create config map
+        """Create domain config
 
         Args:
             params (dict): {
@@ -42,7 +42,7 @@ class DomainConfigService(BaseService):
     @transaction(append_meta={'authorization.scope': 'DOMAIN'})
     @check_required(['name', 'domain_id'])
     def update(self, params):
-        """Update config map
+        """Update domain config
 
         Args:
             params (dict): {
@@ -62,9 +62,38 @@ class DomainConfigService(BaseService):
         return self.domain_config_mgr.update_domain_config(params)
 
     @transaction(append_meta={'authorization.scope': 'DOMAIN'})
+    @check_required(['name', 'data', 'domain_id'])
+    def set(self, params):
+        """Set domain config (create or update)
+
+        Args:
+            params (dict): {
+                'name': 'str',
+                'data': 'dict',
+                'tags': 'dict',
+                'domain_id': 'str'
+            }
+
+        Returns:
+            domain_config_vo (object)
+        """
+
+        domain_id = params['domain_id']
+
+        if 'tags' in params:
+            params['tags'] = utils.dict_to_tags(params['tags'])
+
+        domain_config_vos = self.domain_config_mgr.filter_domain_configs(domain_id=domain_id)
+
+        if domain_config_vos.count() == 0:
+            return self.domain_config_mgr.create_domain_config(params)
+        else:
+            return self.domain_config_mgr.update_domain_config_by_vo(params, domain_config_vos[0])
+
+    @transaction(append_meta={'authorization.scope': 'DOMAIN'})
     @check_required(['name', 'domain_id'])
     def delete(self, params):
-        """Delete config map
+        """Delete domain config
 
         Args:
             params (dict): {
@@ -81,7 +110,7 @@ class DomainConfigService(BaseService):
     @transaction(append_meta={'authorization.scope': 'DOMAIN'})
     @check_required(['name', 'domain_id'])
     def get(self, params):
-        """Get config map
+        """Get domain config
 
         Args:
             params (dict): {
@@ -102,7 +131,7 @@ class DomainConfigService(BaseService):
     @change_tag_filter('tags')
     @append_keyword_filter(['name'])
     def list(self, params):
-        """ List config maps
+        """ List domain configs
 
         Args:
             params (dict): {
