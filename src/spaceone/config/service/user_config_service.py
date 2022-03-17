@@ -35,9 +35,7 @@ class UserConfigService(BaseService):
             user_config_vo (object)
         """
 
-        user_type = self.transaction.get_meta('authorization.user_type')
-        if user_type == 'DOMAIN_OWNER':
-            raise ERROR_PERMISSION_DENIED()
+        self._check_permission(params['domain_id'])
 
         params['user_id'] = self.transaction.get_meta('user_id')
 
@@ -63,6 +61,10 @@ class UserConfigService(BaseService):
             user_config_vo (object)
         """
 
+        self._check_permission(params['domain_id'])
+
+        params['user_id'] = self.transaction.get_meta('user_id')
+
         if 'tags' in params:
             params['tags'] = utils.dict_to_tags(params['tags'])
 
@@ -85,19 +87,19 @@ class UserConfigService(BaseService):
             user_config_vo (object)
         """
 
-        domain_id = params['domain_id']
+        self._check_permission(params['domain_id'])
+
+        params['user_id'] = self.transaction.get_meta('user_id')
 
         user_type = self.transaction.get_meta('authorization.user_type')
         if user_type == 'DOMAIN_OWNER':
             raise ERROR_PERMISSION_DENIED()
 
-        params['user_id'] = self.transaction.get_meta('user_id')
-        user_id = params['user_id']
-
         if 'tags' in params:
             params['tags'] = utils.dict_to_tags(params['tags'])
 
-        user_config_vos = self.user_config_mgr.filter_user_configs(domain_id=domain_id, user_id=user_id)
+        user_config_vos = self.user_config_mgr.filter_user_configs(domain_id=params['domain_id'],
+                                                                   user_id=params['user_id'], name=params['name'])
 
         if user_config_vos.count() == 0:
             return self.user_config_mgr.create_user_config(params)
@@ -119,7 +121,10 @@ class UserConfigService(BaseService):
             None
         """
 
-        self.user_config_mgr.delete_user_config(params['name'], params['domain_id'])
+        self._check_permission(params['domain_id'])
+        user_id = self.transaction.get_meta('user_id')
+
+        self.user_config_mgr.delete_user_config(params['name'], user_id, params['domain_id'])
 
     @transaction(append_meta={'authorization.scope': 'USER'})
     @check_required(['name', 'domain_id'])
@@ -137,7 +142,9 @@ class UserConfigService(BaseService):
             user_config_vo (object)
         """
 
-        return self.user_config_mgr.get_user_config(params['name'], params['domain_id'], params.get('only'))
+        user_id = self.transaction.get_meta('user_id')
+
+        return self.user_config_mgr.get_user_config(params['name'], user_id, params['domain_id'], params.get('only'))
 
     @transaction(append_meta={
         'authorization.scope': 'USER',
@@ -190,3 +197,10 @@ class UserConfigService(BaseService):
 
         query = params.get('query', {})
         return self.user_config_mgr.state_user_configs(query)
+
+    def _check_permission(self, request_domain_id):
+        user_type = self.transaction.get_meta('authorization.user_type')
+        user_domain_id = self.transaction.get_meta('domain_id')
+
+        if user_type == 'DOMAIN_OWNER' or request_domain_id != user_domain_id:
+            raise ERROR_PERMISSION_DENIED()
