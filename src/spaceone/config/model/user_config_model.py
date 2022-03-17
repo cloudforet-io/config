@@ -9,10 +9,10 @@ class UserConfigTag(EmbeddedDocument):
 
 
 class UserConfig(MongoModel):
-    name = StringField(max_length=255, unique_with='domain_id')
+    name = StringField(max_length=255, unique_with=['user_id', 'domain_id'])
     data = DictField()
     tags = ListField(EmbeddedDocumentField(UserConfigTag))
-    user_id = StringField(max_length=40, default=None, null=True)
+    user_id = StringField(max_length=40)
     domain_id = StringField(max_length=40)
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)

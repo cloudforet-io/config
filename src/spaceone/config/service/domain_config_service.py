@@ -83,7 +83,7 @@ class DomainConfigService(BaseService):
         if 'tags' in params:
             params['tags'] = utils.dict_to_tags(params['tags'])
 
-        domain_config_vos = self.domain_config_mgr.filter_domain_configs(domain_id=domain_id)
+        domain_config_vos = self.domain_config_mgr.filter_domain_configs(domain_id=domain_id, name=params['name'])
 
         if domain_config_vos.count() == 0:
             return self.domain_config_mgr.create_domain_config(params)

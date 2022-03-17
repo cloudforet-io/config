@@ -23,6 +23,7 @@ class TestUserConfigService(unittest.TestCase):
         connect('test', host='mongomock://localhost')
 
         cls.domain_id = utils.generate_id('domain')
+        cls.user_id = utils.generate_id('user')
         cls.transaction = Transaction({
             'service': 'config',
             'api_class': 'UserConfig'
@@ -51,10 +52,12 @@ class TestUserConfigService(unittest.TestCase):
             'tags': {
                 utils.random_string(): utils.random_string()
             },
-            'domain_id': utils.generate_id('domain')
+            'domain_id': self.domain_id
         }
 
         self.transaction.method = 'create'
+        self.transaction.set_meta('user_id', self.user_id)
+        self.transaction.set_meta('domain_id', self.domain_id)
         user_config_svc = UserConfigService(transaction=self.transaction)
         user_config_vo = user_config_svc.create(params.copy())
 
@@ -69,7 +72,7 @@ class TestUserConfigService(unittest.TestCase):
 
     @patch.object(MongoModel, 'connect', return_value=None)
     def test_update_user_config(self, *args):
-        new_user_config_vo = UserConfigFactory(domain_id=self.domain_id)
+        new_user_config_vo = UserConfigFactory(domain_id=self.domain_id, user_id=self.user_id)
 
         params = {
             'name': new_user_config_vo.name,
@@ -83,6 +86,8 @@ class TestUserConfigService(unittest.TestCase):
         }
 
         self.transaction.method = 'update'
+        self.transaction.set_meta('user_id', self.user_id)
+        self.transaction.set_meta('domain_id', self.domain_id)
         user_config_svc = UserConfigService(transaction=self.transaction)
         user_config_vo = user_config_svc.update(params.copy())
 
@@ -104,10 +109,12 @@ class TestUserConfigService(unittest.TestCase):
             'tags': {
                 utils.random_string(): utils.random_string()
             },
-            'domain_id': utils.generate_id('domain')
+            'domain_id': self.domain_id
         }
 
         self.transaction.method = 'set'
+        self.transaction.set_meta('user_id', self.user_id)
+        self.transaction.set_meta('domain_id', self.domain_id)
         user_config_svc = UserConfigService(transaction=self.transaction)
         user_config_vo = user_config_svc.create(params.copy())
 
@@ -122,7 +129,7 @@ class TestUserConfigService(unittest.TestCase):
 
     @patch.object(MongoModel, 'connect', return_value=None)
     def test_delete_user_config(self, *args):
-        new_user_config_vo = UserConfigFactory(domain_id=self.domain_id)
+        new_user_config_vo = UserConfigFactory(domain_id=self.domain_id, user_id=self.user_id)
 
         params = {
             'name': new_user_config_vo.name,
@@ -130,6 +137,8 @@ class TestUserConfigService(unittest.TestCase):
         }
 
         self.transaction.method = 'delete'
+        self.transaction.set_meta('user_id', self.user_id)
+        self.transaction.set_meta('domain_id', self.domain_id)
         user_config_svc = UserConfigService(transaction=self.transaction)
         result = user_config_svc.delete(params.copy())
 
@@ -137,7 +146,7 @@ class TestUserConfigService(unittest.TestCase):
 
     @patch.object(MongoModel, 'connect', return_value=None)
     def test_get_user_config(self, *args):
-        new_user_config_vo = UserConfigFactory(domain_id=self.domain_id)
+        new_user_config_vo = UserConfigFactory(domain_id=self.domain_id, user_id=self.user_id)
 
         params = {
             'name': new_user_config_vo.name,
@@ -145,6 +154,8 @@ class TestUserConfigService(unittest.TestCase):
         }
 
         self.transaction.method = 'get'
+        self.transaction.set_meta('user_id', self.user_id)
+        self.transaction.set_meta('domain_id', self.domain_id)
         user_config_svc = UserConfigService(transaction=self.transaction)
         user_config_vo = user_config_svc.get(params.copy())
 
@@ -164,6 +175,7 @@ class TestUserConfigService(unittest.TestCase):
         }
 
         self.transaction.method = 'list'
+        self.transaction.set_meta('user_id', 'test_user')
         user_config_svc = UserConfigService(transaction=self.transaction)
         user_config_vos, total_count = user_config_svc.list(params.copy())
         UserConfigsInfo(user_config_vos, total_count)
