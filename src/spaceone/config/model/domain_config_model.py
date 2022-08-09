@@ -11,7 +11,7 @@ class DomainConfigTag(EmbeddedDocument):
 class DomainConfig(MongoModel):
     name = StringField(max_length=255, unique_with='domain_id')
     data = DictField()
-    tags = ListField(EmbeddedDocumentField(DomainConfigTag))
+    tags = DictField()
     domain_id = StringField(max_length=40)
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -32,6 +32,5 @@ class DomainConfig(MongoModel):
         'indexes': [
             'name',
             'domain_id',
-            ('tags.key', 'tags.value')
         ]
     }

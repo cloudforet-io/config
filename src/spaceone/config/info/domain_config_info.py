@@ -15,7 +15,7 @@ def DomainConfigInfo(domain_config_vo: DomainConfig, minimal=False):
     if not minimal:
         info.update({
             'data': change_struct_type(domain_config_vo.data),
-            'tags': change_struct_type(utils.tags_to_dict(domain_config_vo.tags)),
+            'tags': change_struct_type(domain_config_vo.tags),
             'domain_id': domain_config_vo.domain_id,
             'updated_at': utils.datetime_to_iso8601(domain_config_vo.updated_at),
             'created_at': utils.datetime_to_iso8601(domain_config_vo.created_at)

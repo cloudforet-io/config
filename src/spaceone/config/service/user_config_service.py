@@ -39,9 +39,6 @@ class UserConfigService(BaseService):
 
         params['user_id'] = self.transaction.get_meta('user_id')
 
-        if 'tags' in params:
-            params['tags'] = utils.dict_to_tags(params['tags'])
-
         return self.user_config_mgr.create_user_config(params)
 
     @transaction(append_meta={'authorization.scope': 'USER'})
@@ -64,9 +61,6 @@ class UserConfigService(BaseService):
         self._check_permission(params['domain_id'])
 
         params['user_id'] = self.transaction.get_meta('user_id')
-
-        if 'tags' in params:
-            params['tags'] = utils.dict_to_tags(params['tags'])
 
         return self.user_config_mgr.update_user_config(params)
 
@@ -94,9 +88,6 @@ class UserConfigService(BaseService):
         user_type = self.transaction.get_meta('authorization.user_type')
         if user_type == 'DOMAIN_OWNER':
             raise ERROR_PERMISSION_DENIED()
-
-        if 'tags' in params:
-            params['tags'] = utils.dict_to_tags(params['tags'])
 
         user_config_vos = self.user_config_mgr.filter_user_configs(domain_id=params['domain_id'],
                                                                    user_id=params['user_id'], name=params['name'])
@@ -152,7 +143,6 @@ class UserConfigService(BaseService):
     })
     @check_required(['domain_id'])
     @append_query_filter(['name', 'user_id', 'domain_id', 'user_self'])
-    @change_tag_filter('tags')
     @append_keyword_filter(['name'])
     def list(self, params):
         """ List user configs
@@ -179,7 +169,6 @@ class UserConfigService(BaseService):
     })
     @check_required(['query', 'domain_id'])
     @append_query_filter(['domain_id', 'user_self'])
-    @change_tag_filter('tags')
     @append_keyword_filter(['name'])
     def stat(self, params):
         """

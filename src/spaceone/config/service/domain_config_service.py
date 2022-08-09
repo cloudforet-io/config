@@ -34,9 +34,6 @@ class DomainConfigService(BaseService):
             domain_config_vo (object)
         """
 
-        if 'tags' in params:
-            params['tags'] = utils.dict_to_tags(params['tags'])
-
         return self.domain_config_mgr.create_domain_config(params)
 
     @transaction(append_meta={'authorization.scope': 'DOMAIN'})
@@ -55,9 +52,6 @@ class DomainConfigService(BaseService):
         Returns:
             domain_config_vo (object)
         """
-
-        if 'tags' in params:
-            params['tags'] = utils.dict_to_tags(params['tags'])
 
         return self.domain_config_mgr.update_domain_config(params)
 
@@ -79,9 +73,6 @@ class DomainConfigService(BaseService):
         """
 
         domain_id = params['domain_id']
-
-        if 'tags' in params:
-            params['tags'] = utils.dict_to_tags(params['tags'])
 
         domain_config_vos = self.domain_config_mgr.filter_domain_configs(domain_id=domain_id, name=params['name'])
 
@@ -128,7 +119,6 @@ class DomainConfigService(BaseService):
     @transaction(append_meta={'authorization.scope': 'DOMAIN'})
     @check_required(['domain_id'])
     @append_query_filter(['name', 'domain_id'])
-    @change_tag_filter('tags')
     @append_keyword_filter(['name'])
     def list(self, params):
         """ List domain configs
@@ -151,7 +141,6 @@ class DomainConfigService(BaseService):
     @transaction(append_meta={'authorization.scope': 'DOMAIN'})
     @check_required(['query', 'domain_id'])
     @append_query_filter(['domain_id'])
-    @change_tag_filter('tags')
     @append_keyword_filter(['name'])
     def stat(self, params):
         """

@@ -5,7 +5,6 @@ from spaceone.config.model.domain_config_model import DomainConfig
 
 
 class DomainConfigFactory(factory.mongoengine.MongoEngineFactory):
-
     class Meta:
         model = DomainConfig
 
@@ -16,12 +15,7 @@ class DomainConfigFactory(factory.mongoengine.MongoEngineFactory):
             'key3': 'value3'
         }
     }
-    tags = [
-        {
-            'key': 'tag_key',
-            'value': 'tag_value'
-        }
-    ]
+    tags = {'tag_key': 'tag_value'}
     domain_id = utils.generate_id('domain')
     updated_at = factory.Faker('date_time')
     created_at = factory.Faker('date_time')

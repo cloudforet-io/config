@@ -21,22 +21,16 @@ class _MockDomainConfigService(BaseService):
 
     def create(self, params):
         params = copy.deepcopy(params)
-        if 'tags' in params:
-            params['tags'] = utils.dict_to_tags(params['tags'])
 
         return DomainConfigFactory(**params)
 
     def update(self, params):
         params = copy.deepcopy(params)
-        if 'tags' in params:
-            params['tags'] = utils.dict_to_tags(params['tags'])
 
         return DomainConfigFactory(**params)
 
     def set(self, params):
         params = copy.deepcopy(params)
-        if 'tags' in params:
-            params['tags'] = utils.dict_to_tags(params['tags'])
 
         return DomainConfigFactory(**params)
 
