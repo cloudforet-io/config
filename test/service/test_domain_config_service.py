@@ -64,7 +64,7 @@ class TestDomainConfigService(unittest.TestCase):
         self.assertIsInstance(domain_config_vo, DomainConfig)
         self.assertEqual(params['name'], domain_config_vo.name)
         self.assertEqual(params['data'], domain_config_vo.data)
-        self.assertEqual(params['tags'], utils.tags_to_dict(domain_config_vo.tags))
+        self.assertEqual(params['tags'], domain_config_vo.tags)
         self.assertEqual(params['domain_id'], domain_config_vo.domain_id)
 
     @patch.object(MongoModel, 'connect', return_value=None)
@@ -91,7 +91,7 @@ class TestDomainConfigService(unittest.TestCase):
 
         self.assertIsInstance(domain_config_vo, DomainConfig)
         self.assertEqual(params['data'], domain_config_vo.data)
-        self.assertEqual(params['tags'], utils.tags_to_dict(domain_config_vo.tags))
+        self.assertEqual(params['tags'], domain_config_vo.tags)
         self.assertEqual(params['domain_id'], domain_config_vo.domain_id)
 
     @patch.object(MongoModel, 'connect', return_value=None)
@@ -117,7 +117,7 @@ class TestDomainConfigService(unittest.TestCase):
         self.assertIsInstance(domain_config_vo, DomainConfig)
         self.assertEqual(params['name'], domain_config_vo.name)
         self.assertEqual(params['data'], domain_config_vo.data)
-        self.assertEqual(params['tags'], utils.tags_to_dict(domain_config_vo.tags))
+        self.assertEqual(params['tags'], domain_config_vo.tags)
         self.assertEqual(params['domain_id'], domain_config_vo.domain_id)
 
     @patch.object(MongoModel, 'connect', return_value=None)
@@ -174,7 +174,7 @@ class TestDomainConfigService(unittest.TestCase):
 
     @patch.object(MongoModel, 'connect', return_value=None)
     def test_list_domain_configs_by_tag(self, *args):
-        DomainConfigFactory(tags=[{'key': 'tag_key_1', 'value': 'tag_value_1'}], domain_id=self.domain_id)
+        DomainConfigFactory(tags={'tag_key_1': 'tag_value_1'}, domain_id=self.domain_id)
         domain_config_vos = DomainConfigFactory.build_batch(9, domain_id=self.domain_id)
         list(map(lambda vo: vo.save(), domain_config_vos))
 

@@ -5,7 +5,6 @@ from spaceone.config.model.user_config_model import UserConfig
 
 
 class UserConfigFactory(factory.mongoengine.MongoEngineFactory):
-
     class Meta:
         model = UserConfig
 
@@ -16,12 +15,7 @@ class UserConfigFactory(factory.mongoengine.MongoEngineFactory):
             'key3': 'value3'
         }
     }
-    tags = [
-        {
-            'key': 'tag_key',
-            'value': 'tag_value'
-        }
-    ]
+    tags = {'tag_key': 'tag_value'}
     domain_id = utils.generate_id('domain')
     user_id = utils.generate_id('user')
     updated_at = factory.Faker('date_time')

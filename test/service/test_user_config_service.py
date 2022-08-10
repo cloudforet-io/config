@@ -67,7 +67,7 @@ class TestUserConfigService(unittest.TestCase):
         self.assertIsInstance(user_config_vo, UserConfig)
         self.assertEqual(params['name'], user_config_vo.name)
         self.assertEqual(params['data'], user_config_vo.data)
-        self.assertEqual(params['tags'], utils.tags_to_dict(user_config_vo.tags))
+        self.assertEqual(params['tags'], user_config_vo.tags)
         self.assertEqual(params['domain_id'], user_config_vo.domain_id)
 
     @patch.object(MongoModel, 'connect', return_value=None)
@@ -96,7 +96,7 @@ class TestUserConfigService(unittest.TestCase):
 
         self.assertIsInstance(user_config_vo, UserConfig)
         self.assertEqual(params['data'], user_config_vo.data)
-        self.assertEqual(params['tags'], utils.tags_to_dict(user_config_vo.tags))
+        self.assertEqual(params['tags'], user_config_vo.tags)
         self.assertEqual(params['domain_id'], user_config_vo.domain_id)
 
     @patch.object(MongoModel, 'connect', return_value=None)
@@ -124,7 +124,7 @@ class TestUserConfigService(unittest.TestCase):
         self.assertIsInstance(user_config_vo, UserConfig)
         self.assertEqual(params['name'], user_config_vo.name)
         self.assertEqual(params['data'], user_config_vo.data)
-        self.assertEqual(params['tags'], utils.tags_to_dict(user_config_vo.tags))
+        self.assertEqual(params['tags'], user_config_vo.tags)
         self.assertEqual(params['domain_id'], user_config_vo.domain_id)
 
     @patch.object(MongoModel, 'connect', return_value=None)
@@ -186,7 +186,7 @@ class TestUserConfigService(unittest.TestCase):
 
     @patch.object(MongoModel, 'connect', return_value=None)
     def test_list_user_configs_by_tag(self, *args):
-        UserConfigFactory(tags=[{'key': 'tag_key_1', 'value': 'tag_value_1'}], domain_id=self.domain_id)
+        UserConfigFactory(tags={'tag_key_1': 'tag_value_1'}, domain_id=self.domain_id)
         user_config_vos = UserConfigFactory.build_batch(9, domain_id=self.domain_id)
         list(map(lambda vo: vo.save(), user_config_vos))
 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="TestUserConfigService-20220809102326" tests="9" file=".py" time="0.108" timestamp="2022-08-09T10:23:26" failures="0" errors="0" skipped="0">
+	<testcase classname="TestUserConfigService" name="test_create_user_config" time="0.011" timestamp="2022-08-09T10:23:26" file="test_user_config_service.py" line="45">
+		<system-out><![CDATA[
+(tearDown) ==> Delete all config maps
+]]></system-out>
+	</testcase>
+	<testcase classname="TestUserConfigService" name="test_delete_user_config" time="0.060" timestamp="2022-08-09T10:23:26" file="test_user_config_service.py" line="130">
+		<system-out><![CDATA[
+(tearDown) ==> Delete all config maps
+]]></system-out>
+	</testcase>
+	<testcase classname="TestUserConfigService" name="test_get_user_config" time="0.003" timestamp="2022-08-09T10:23:26" file="test_user_config_service.py" line="147">
+		<system-out><![CDATA[
+(tearDown) ==> Delete all config maps
+]]></system-out>
+	</testcase>
+	<testcase classname="TestUserConfigService" name="test_list_user_configs_by_name" time="0.006" timestamp="2022-08-09T10:23:26" file="test_user_config_service.py" line="167">
+		<system-out><![CDATA[
+(tearDown) ==> Delete all config maps
+]]></system-out>
+	</testcase>
+	<testcase classname="TestUserConfigService" name="test_list_user_configs_by_tag" time="0.007" timestamp="2022-08-09T10:23:26" file="test_user_config_service.py" line="187">
+		<system-out><![CDATA[
+(tearDown) ==> Delete all config maps
+]]></system-out>
+	</testcase>
+	<testcase classname="TestUserConfigService" name="test_set_user_config" time="0.002" timestamp="2022-08-09T10:23:26" file="test_user_config_service.py" line="102">
+		<system-out><![CDATA[
+(tearDown) ==> Delete all config maps
+]]></system-out>
+	</testcase>
+	<testcase classname="TestUserConfigService" name="test_stat_user_configs" time="0.007" timestamp="2022-08-09T10:23:26" file="test_user_config_service.py" line="213">
+		<system-out><![CDATA[
+(tearDown) ==> Delete all config maps
+]]></system-out>
+	</testcase>
+	<testcase classname="TestUserConfigService" name="test_stat_user_configs_distinct" time="0.007" timestamp="2022-08-09T10:23:26" file="test_user_config_service.py" line="248">
+		<system-out><![CDATA[
+(tearDown) ==> Delete all config maps
+]]></system-out>
+	</testcase>
+	<testcase classname="TestUserConfigService" name="test_update_user_config" time="0.004" timestamp="2022-08-09T10:23:26" file="test_user_config_service.py" line="73">
+		<system-out><![CDATA[
+(tearDown) ==> Delete all config maps
+]]></system-out>
+	</testcase>
+</testsuite>
