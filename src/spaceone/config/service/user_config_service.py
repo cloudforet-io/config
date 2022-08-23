@@ -137,12 +137,9 @@ class UserConfigService(BaseService):
 
         return self.user_config_mgr.get_user_config(params['name'], user_id, params['domain_id'], params.get('only'))
 
-    @transaction(append_meta={
-        'authorization.scope': 'USER',
-        'mutation.append_parameter': {'user_self': {'meta': 'user_id', 'data': [None]}}
-    })
+    @transaction(append_meta={'authorization.scope': 'USER'})
     @check_required(['domain_id'])
-    @append_query_filter(['name', 'user_id', 'domain_id', 'user_self'])
+    @append_query_filter(['name', 'user_id', 'domain_id'])
     @append_keyword_filter(['name'])
     def list(self, params):
         """ List user configs
@@ -151,8 +148,7 @@ class UserConfigService(BaseService):
             params (dict): {
                 'name': 'str',
                 'domain_id': 'str',
-                'query': 'dict (spaceone.api.core.v1.Query)',
-                'user_self': 'list', // from meta
+                'query': 'dict (spaceone.api.core.v1.Query)'
             }
 
         Returns:
@@ -163,12 +159,9 @@ class UserConfigService(BaseService):
         query = params.get('query', {})
         return self.user_config_mgr.list_user_configs(query)
 
-    @transaction(append_meta={
-        'authorization.scope': 'USER',
-        'mutation.append_parameter': {'user_self': {'meta': 'user_id', 'data': [None]}}
-    })
+    @transaction(append_meta={'authorization.scope': 'USER'})
     @check_required(['query', 'domain_id'])
-    @append_query_filter(['domain_id', 'user_self'])
+    @append_query_filter(['domain_id'])
     @append_keyword_filter(['name'])
     def stat(self, params):
         """
