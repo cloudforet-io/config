@@ -22,9 +22,6 @@ class UserConfig(MongoModel):
         'minimal_fields': [
             'name'
         ],
-        'change_query_keys': {
-            'user_self': 'user_id'
-        },
         'ordering': [
             'name'
         ],
