@@ -7,15 +7,16 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class UserConfigManager(BaseManager):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.user_config_model: UserConfig = self.locator.get_model('UserConfig')
+        self.user_config_model: UserConfig = self.locator.get_model("UserConfig")
 
     def create_user_config(self, params):
         def _rollback(user_config_vo):
-            _LOGGER.info(f'[create_user_config._rollback] '
-                         f'Delete config map : {user_config_vo.name}')
+            _LOGGER.info(
+                f"[create_user_config._rollback] "
+                f"Delete config map : {user_config_vo.name}"
+            )
             user_config_vo.delete()
 
         user_config_vo: UserConfig = self.user_config_model.create(params)
@@ -24,12 +25,16 @@ class UserConfigManager(BaseManager):
         return user_config_vo
 
     def update_user_config(self, params):
-        user_config_vo: UserConfig = self.get_user_config(params['name'], params['user_id'], params['domain_id'])
+        user_config_vo: UserConfig = self.get_user_config(
+            params["name"], params["user_id"], params["domain_id"]
+        )
         return self.update_user_config_by_vo(params, user_config_vo)
 
     def update_user_config_by_vo(self, params, user_config_vo):
         def _rollback(old_data):
-            _LOGGER.info(f'[update_user_config_by_vo._rollback] Revert Data : {old_data["name"]}')
+            _LOGGER.info(
+                f'[update_user_config_by_vo._rollback] Revert Data : {old_data["name"]}'
+            )
             user_config_vo.update(old_data)
 
         self.transaction.add_rollback(_rollback, user_config_vo.to_dict())
@@ -41,7 +46,9 @@ class UserConfigManager(BaseManager):
         user_config_vo.delete()
 
     def get_user_config(self, name, user_id, domain_id, only=None):
-        return self.user_config_model.get(name=name, user_id=user_id, domain_id=domain_id, only=only)
+        return self.user_config_model.get(
+            name=name, user_id=user_id, domain_id=domain_id, only=only
+        )
 
     def filter_user_configs(self, **conditions):
         return self.user_config_model.filter(**conditions)

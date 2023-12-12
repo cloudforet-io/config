@@ -16,18 +16,14 @@ from test.factory.user_config_factory import UserConfigFactory
 
 
 class TestUserConfigService(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls):
-        config.init_conf(package='spaceone.config')
-        connect('test', host='mongomock://localhost')
+        config.init_conf(package="spaceone.config")
+        connect("test", host="mongomock://localhost")
 
-        cls.domain_id = utils.generate_id('domain')
-        cls.user_id = utils.generate_id('user')
-        cls.transaction = Transaction({
-            'service': 'config',
-            'api_class': 'UserConfig'
-        })
+        cls.domain_id = utils.generate_id("domain")
+        cls.user_id = utils.generate_id("user")
+        cls.transaction = Transaction({"service": "config", "api_class": "UserConfig"})
         super().setUpClass()
 
     @classmethod
@@ -35,147 +31,132 @@ class TestUserConfigService(unittest.TestCase):
         super().tearDownClass()
         disconnect()
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def tearDown(self, *args) -> None:
         print()
-        print('(tearDown) ==> Delete all config maps')
+        print("(tearDown) ==> Delete all config maps")
         user_config_vos = UserConfig.objects.filter()
         user_config_vos.delete()
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_create_user_config(self, *args):
         params = {
-            'name': 'inventory.server.metadata.view.table.layout',
-            'data': {
-                'key': 'value'
-            },
-            'tags': {
-                utils.random_string(): utils.random_string()
-            },
-            'domain_id': self.domain_id
+            "name": "inventory.server.metadata.view.table.layout",
+            "data": {"key": "value"},
+            "tags": {utils.random_string(): utils.random_string()},
+            "domain_id": self.domain_id,
         }
 
-        self.transaction.method = 'create'
-        self.transaction.set_meta('user_id', self.user_id)
-        self.transaction.set_meta('domain_id', self.domain_id)
+        self.transaction.method = "create"
+        self.transaction.set_meta("user_id", self.user_id)
+        self.transaction.set_meta("domain_id", self.domain_id)
         user_config_svc = UserConfigService(transaction=self.transaction)
         user_config_vo = user_config_svc.create(params.copy())
 
-        print_data(user_config_vo.to_dict(), 'test_create_user_config')
+        print_data(user_config_vo.to_dict(), "test_create_user_config")
         UserConfigInfo(user_config_vo)
 
         self.assertIsInstance(user_config_vo, UserConfig)
-        self.assertEqual(params['name'], user_config_vo.name)
-        self.assertEqual(params['data'], user_config_vo.data)
-        self.assertEqual(params['tags'], user_config_vo.tags)
-        self.assertEqual(params['domain_id'], user_config_vo.domain_id)
+        self.assertEqual(params["name"], user_config_vo.name)
+        self.assertEqual(params["data"], user_config_vo.data)
+        self.assertEqual(params["tags"], user_config_vo.tags)
+        self.assertEqual(params["domain_id"], user_config_vo.domain_id)
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_update_user_config(self, *args):
-        new_user_config_vo = UserConfigFactory(domain_id=self.domain_id, user_id=self.user_id)
+        new_user_config_vo = UserConfigFactory(
+            domain_id=self.domain_id, user_id=self.user_id
+        )
 
         params = {
-            'name': new_user_config_vo.name,
-            'data': {
-                'update_data_key': 'update_data_value'
-            },
-            'tags': {
-                'update_key': 'update_value'
-            },
-            'domain_id': self.domain_id
+            "name": new_user_config_vo.name,
+            "data": {"update_data_key": "update_data_value"},
+            "tags": {"update_key": "update_value"},
+            "domain_id": self.domain_id,
         }
 
-        self.transaction.method = 'update'
-        self.transaction.set_meta('user_id', self.user_id)
-        self.transaction.set_meta('domain_id', self.domain_id)
+        self.transaction.method = "update"
+        self.transaction.set_meta("user_id", self.user_id)
+        self.transaction.set_meta("domain_id", self.domain_id)
         user_config_svc = UserConfigService(transaction=self.transaction)
         user_config_vo = user_config_svc.update(params.copy())
 
-        print_data(user_config_vo.to_dict(), 'test_update_user_config')
+        print_data(user_config_vo.to_dict(), "test_update_user_config")
         UserConfigInfo(user_config_vo)
 
         self.assertIsInstance(user_config_vo, UserConfig)
-        self.assertEqual(params['data'], user_config_vo.data)
-        self.assertEqual(params['tags'], user_config_vo.tags)
-        self.assertEqual(params['domain_id'], user_config_vo.domain_id)
+        self.assertEqual(params["data"], user_config_vo.data)
+        self.assertEqual(params["tags"], user_config_vo.tags)
+        self.assertEqual(params["domain_id"], user_config_vo.domain_id)
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_set_user_config(self, *args):
         params = {
-            'name': 'inventory.server.metadata.view.table.layout',
-            'data': {
-                'key': 'value'
-            },
-            'tags': {
-                utils.random_string(): utils.random_string()
-            },
-            'domain_id': self.domain_id
+            "name": "inventory.server.metadata.view.table.layout",
+            "data": {"key": "value"},
+            "tags": {utils.random_string(): utils.random_string()},
+            "domain_id": self.domain_id,
         }
 
-        self.transaction.method = 'set'
-        self.transaction.set_meta('user_id', self.user_id)
-        self.transaction.set_meta('domain_id', self.domain_id)
+        self.transaction.method = "set"
+        self.transaction.set_meta("user_id", self.user_id)
+        self.transaction.set_meta("domain_id", self.domain_id)
         user_config_svc = UserConfigService(transaction=self.transaction)
         user_config_vo = user_config_svc.create(params.copy())
 
-        print_data(user_config_vo.to_dict(), 'test_set_user_config')
+        print_data(user_config_vo.to_dict(), "test_set_user_config")
         UserConfigInfo(user_config_vo)
 
         self.assertIsInstance(user_config_vo, UserConfig)
-        self.assertEqual(params['name'], user_config_vo.name)
-        self.assertEqual(params['data'], user_config_vo.data)
-        self.assertEqual(params['tags'], user_config_vo.tags)
-        self.assertEqual(params['domain_id'], user_config_vo.domain_id)
+        self.assertEqual(params["name"], user_config_vo.name)
+        self.assertEqual(params["data"], user_config_vo.data)
+        self.assertEqual(params["tags"], user_config_vo.tags)
+        self.assertEqual(params["domain_id"], user_config_vo.domain_id)
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_delete_user_config(self, *args):
-        new_user_config_vo = UserConfigFactory(domain_id=self.domain_id, user_id=self.user_id)
+        new_user_config_vo = UserConfigFactory(
+            domain_id=self.domain_id, user_id=self.user_id
+        )
 
-        params = {
-            'name': new_user_config_vo.name,
-            'domain_id': self.domain_id
-        }
+        params = {"name": new_user_config_vo.name, "domain_id": self.domain_id}
 
-        self.transaction.method = 'delete'
-        self.transaction.set_meta('user_id', self.user_id)
-        self.transaction.set_meta('domain_id', self.domain_id)
+        self.transaction.method = "delete"
+        self.transaction.set_meta("user_id", self.user_id)
+        self.transaction.set_meta("domain_id", self.domain_id)
         user_config_svc = UserConfigService(transaction=self.transaction)
         result = user_config_svc.delete(params.copy())
 
         self.assertIsNone(result)
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_get_user_config(self, *args):
-        new_user_config_vo = UserConfigFactory(domain_id=self.domain_id, user_id=self.user_id)
+        new_user_config_vo = UserConfigFactory(
+            domain_id=self.domain_id, user_id=self.user_id
+        )
 
-        params = {
-            'name': new_user_config_vo.name,
-            'domain_id': self.domain_id
-        }
+        params = {"name": new_user_config_vo.name, "domain_id": self.domain_id}
 
-        self.transaction.method = 'get'
-        self.transaction.set_meta('user_id', self.user_id)
-        self.transaction.set_meta('domain_id', self.domain_id)
+        self.transaction.method = "get"
+        self.transaction.set_meta("user_id", self.user_id)
+        self.transaction.set_meta("domain_id", self.domain_id)
         user_config_svc = UserConfigService(transaction=self.transaction)
         user_config_vo = user_config_svc.get(params.copy())
 
-        print_data(user_config_vo.to_dict(), 'test_get_user_config')
+        print_data(user_config_vo.to_dict(), "test_get_user_config")
         UserConfigInfo(user_config_vo)
 
         self.assertIsInstance(user_config_vo, UserConfig)
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_list_user_configs_by_name(self, *args):
         user_config_vos = UserConfigFactory.build_batch(10, domain_id=self.domain_id)
         list(map(lambda vo: vo.save(), user_config_vos))
 
-        params = {
-            'name': user_config_vos[0].name,
-            'domain_id': self.domain_id
-        }
+        params = {"name": user_config_vos[0].name, "domain_id": self.domain_id}
 
-        self.transaction.method = 'list'
-        self.transaction.set_meta('user_id', 'test_user')
+        self.transaction.method = "list"
+        self.transaction.set_meta("user_id", "test_user")
         user_config_svc = UserConfigService(transaction=self.transaction)
         user_config_vos, total_count = user_config_svc.list(params.copy())
         UserConfigsInfo(user_config_vos, total_count)
@@ -184,24 +165,20 @@ class TestUserConfigService(unittest.TestCase):
         self.assertIsInstance(user_config_vos[0], UserConfig)
         self.assertEqual(total_count, 1)
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_list_user_configs_by_tag(self, *args):
-        UserConfigFactory(tags={'tag_key_1': 'tag_value_1'}, domain_id=self.domain_id)
+        UserConfigFactory(tags={"tag_key_1": "tag_value_1"}, domain_id=self.domain_id)
         user_config_vos = UserConfigFactory.build_batch(9, domain_id=self.domain_id)
         list(map(lambda vo: vo.save(), user_config_vos))
 
         params = {
-            'query': {
-                'filter': [{
-                    'k': 'tags.tag_key_1',
-                    'v': 'tag_value_1',
-                    'o': 'eq'
-                }]
+            "query": {
+                "filter": [{"k": "tags.tag_key_1", "v": "tag_value_1", "o": "eq"}]
             },
-            'domain_id': self.domain_id
+            "domain_id": self.domain_id,
         }
 
-        self.transaction.method = 'list'
+        self.transaction.method = "list"
         user_config_svc = UserConfigService(transaction=self.transaction)
         user_config_vos, total_count = user_config_svc.list(params.copy())
         UserConfigsInfo(user_config_vos, total_count)
@@ -210,63 +187,49 @@ class TestUserConfigService(unittest.TestCase):
         self.assertIsInstance(user_config_vos[0], UserConfig)
         self.assertEqual(total_count, 1)
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_stat_user_configs(self, *args):
         user_config_vos = UserConfigFactory.build_batch(10, domain_id=self.domain_id)
         list(map(lambda vo: vo.save(), user_config_vos))
 
         params = {
-            'domain_id': self.domain_id,
-            'query': {
-                'aggregate': [{
-                    'group': {
-                        'keys': [{
-                            'key': 'name',
-                            'name': 'Name'
-                        }],
-                        'fields': [{
-                            'operator': 'count',
-                            'name': 'Count'
-                        }]
-                    }
-                }, {
-                    'sort': {
-                        'key': 'Count',
-                        'desc': True
-                    }
-                }]
-            }
+            "domain_id": self.domain_id,
+            "query": {
+                "aggregate": [
+                    {
+                        "group": {
+                            "keys": [{"key": "name", "name": "Name"}],
+                            "fields": [{"operator": "count", "name": "Count"}],
+                        }
+                    },
+                    {"sort": {"key": "Count", "desc": True}},
+                ]
+            },
         }
 
-        self.transaction.method = 'stat'
+        self.transaction.method = "stat"
         user_config_svc = UserConfigService(transaction=self.transaction)
         values = user_config_svc.stat(params)
         StatisticsInfo(values)
 
-        print_data(values, 'test_stat_user_configs')
+        print_data(values, "test_stat_user_configs")
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_stat_user_configs_distinct(self, *args):
         user_config_vos = UserConfigFactory.build_batch(10, domain_id=self.domain_id)
         list(map(lambda vo: vo.save(), user_config_vos))
 
         params = {
-            'domain_id': self.domain_id,
-            'query': {
-                'distinct': 'name',
-                'page': {
-                    'start': 2,
-                    'limit': 3
-                }
-            }
+            "domain_id": self.domain_id,
+            "query": {"distinct": "name", "page": {"start": 2, "limit": 3}},
         }
 
-        self.transaction.method = 'stat'
+        self.transaction.method = "stat"
         user_config_svc = UserConfigService(transaction=self.transaction)
         values = user_config_svc.stat(params)
         StatisticsInfo(values)
 
-        print_data(values, 'test_stat_user_configs_distinct')
+        print_data(values, "test_stat_user_configs_distinct")
 
 
 if __name__ == "__main__":

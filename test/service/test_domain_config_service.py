@@ -16,17 +16,15 @@ from test.factory.domain_config_factory import DomainConfigFactory
 
 
 class TestDomainConfigService(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls):
-        config.init_conf(package='spaceone.config')
-        connect('test', host='mongomock://localhost')
+        config.init_conf(package="spaceone.config")
+        connect("test", host="mongomock://localhost")
 
-        cls.domain_id = utils.generate_id('domain')
-        cls.transaction = Transaction({
-            'service': 'config',
-            'api_class': 'DomainConfig'
-        })
+        cls.domain_id = utils.generate_id("domain")
+        cls.transaction = Transaction(
+            {"service": "config", "api_class": "DomainConfig"}
+        )
         super().setUpClass()
 
     @classmethod
@@ -34,136 +32,117 @@ class TestDomainConfigService(unittest.TestCase):
         super().tearDownClass()
         disconnect()
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def tearDown(self, *args) -> None:
         print()
-        print('(tearDown) ==> Delete all config maps')
+        print("(tearDown) ==> Delete all config maps")
         domain_config_vos = DomainConfig.objects.filter()
         domain_config_vos.delete()
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_create_domain_config(self, *args):
         params = {
-            'name': 'inventory.server.metadata.view.table.layout',
-            'data': {
-                'key': 'value'
-            },
-            'tags': {
-                utils.random_string(): utils.random_string()
-            },
-            'domain_id': utils.generate_id('domain')
+            "name": "inventory.server.metadata.view.table.layout",
+            "data": {"key": "value"},
+            "tags": {utils.random_string(): utils.random_string()},
+            "domain_id": utils.generate_id("domain"),
         }
 
-        self.transaction.method = 'create'
+        self.transaction.method = "create"
         domain_config_svc = DomainConfigService(transaction=self.transaction)
         domain_config_vo = domain_config_svc.create(params.copy())
 
-        print_data(domain_config_vo.to_dict(), 'test_create_domain_config')
+        print_data(domain_config_vo.to_dict(), "test_create_domain_config")
         DomainConfigInfo(domain_config_vo)
 
         self.assertIsInstance(domain_config_vo, DomainConfig)
-        self.assertEqual(params['name'], domain_config_vo.name)
-        self.assertEqual(params['data'], domain_config_vo.data)
-        self.assertEqual(params['tags'], domain_config_vo.tags)
-        self.assertEqual(params['domain_id'], domain_config_vo.domain_id)
+        self.assertEqual(params["name"], domain_config_vo.name)
+        self.assertEqual(params["data"], domain_config_vo.data)
+        self.assertEqual(params["tags"], domain_config_vo.tags)
+        self.assertEqual(params["domain_id"], domain_config_vo.domain_id)
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_update_domain_config(self, *args):
         new_domain_config_vo = DomainConfigFactory(domain_id=self.domain_id)
 
         params = {
-            'name': new_domain_config_vo.name,
-            'data': {
-                'update_data_key': 'update_data_value'
-            },
-            'tags': {
-                'update_key': 'update_value'
-            },
-            'domain_id': self.domain_id
+            "name": new_domain_config_vo.name,
+            "data": {"update_data_key": "update_data_value"},
+            "tags": {"update_key": "update_value"},
+            "domain_id": self.domain_id,
         }
 
-        self.transaction.method = 'update'
+        self.transaction.method = "update"
         domain_config_svc = DomainConfigService(transaction=self.transaction)
         domain_config_vo = domain_config_svc.update(params.copy())
 
-        print_data(domain_config_vo.to_dict(), 'test_update_domain_config')
+        print_data(domain_config_vo.to_dict(), "test_update_domain_config")
         DomainConfigInfo(domain_config_vo)
 
         self.assertIsInstance(domain_config_vo, DomainConfig)
-        self.assertEqual(params['data'], domain_config_vo.data)
-        self.assertEqual(params['tags'], domain_config_vo.tags)
-        self.assertEqual(params['domain_id'], domain_config_vo.domain_id)
+        self.assertEqual(params["data"], domain_config_vo.data)
+        self.assertEqual(params["tags"], domain_config_vo.tags)
+        self.assertEqual(params["domain_id"], domain_config_vo.domain_id)
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_set_domain_config(self, *args):
         params = {
-            'name': 'inventory.server.metadata.view.table.layout',
-            'data': {
-                'key': 'value'
-            },
-            'tags': {
-                utils.random_string(): utils.random_string()
-            },
-            'domain_id': utils.generate_id('domain')
+            "name": "inventory.server.metadata.view.table.layout",
+            "data": {"key": "value"},
+            "tags": {utils.random_string(): utils.random_string()},
+            "domain_id": utils.generate_id("domain"),
         }
 
-        self.transaction.method = 'set'
+        self.transaction.method = "set"
         domain_config_svc = DomainConfigService(transaction=self.transaction)
         domain_config_vo = domain_config_svc.create(params.copy())
 
-        print_data(domain_config_vo.to_dict(), 'test_set_domain_config')
+        print_data(domain_config_vo.to_dict(), "test_set_domain_config")
         DomainConfigInfo(domain_config_vo)
 
         self.assertIsInstance(domain_config_vo, DomainConfig)
-        self.assertEqual(params['name'], domain_config_vo.name)
-        self.assertEqual(params['data'], domain_config_vo.data)
-        self.assertEqual(params['tags'], domain_config_vo.tags)
-        self.assertEqual(params['domain_id'], domain_config_vo.domain_id)
+        self.assertEqual(params["name"], domain_config_vo.name)
+        self.assertEqual(params["data"], domain_config_vo.data)
+        self.assertEqual(params["tags"], domain_config_vo.tags)
+        self.assertEqual(params["domain_id"], domain_config_vo.domain_id)
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_delete_domain_config(self, *args):
         new_domain_config_vo = DomainConfigFactory(domain_id=self.domain_id)
 
-        params = {
-            'name': new_domain_config_vo.name,
-            'domain_id': self.domain_id
-        }
+        params = {"name": new_domain_config_vo.name, "domain_id": self.domain_id}
 
-        self.transaction.method = 'delete'
+        self.transaction.method = "delete"
         domain_config_svc = DomainConfigService(transaction=self.transaction)
         result = domain_config_svc.delete(params.copy())
 
         self.assertIsNone(result)
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_get_domain_config(self, *args):
         new_domain_config_vo = DomainConfigFactory(domain_id=self.domain_id)
 
-        params = {
-            'name': new_domain_config_vo.name,
-            'domain_id': self.domain_id
-        }
+        params = {"name": new_domain_config_vo.name, "domain_id": self.domain_id}
 
-        self.transaction.method = 'get'
+        self.transaction.method = "get"
         domain_config_svc = DomainConfigService(transaction=self.transaction)
         domain_config_vo = domain_config_svc.get(params.copy())
 
-        print_data(domain_config_vo.to_dict(), 'test_get_domain_config')
+        print_data(domain_config_vo.to_dict(), "test_get_domain_config")
         DomainConfigInfo(domain_config_vo)
 
         self.assertIsInstance(domain_config_vo, DomainConfig)
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_list_domain_configs_by_name(self, *args):
-        domain_config_vos = DomainConfigFactory.build_batch(10, domain_id=self.domain_id)
+        domain_config_vos = DomainConfigFactory.build_batch(
+            10, domain_id=self.domain_id
+        )
         list(map(lambda vo: vo.save(), domain_config_vos))
 
-        params = {
-            'name': domain_config_vos[0].name,
-            'domain_id': self.domain_id
-        }
+        params = {"name": domain_config_vos[0].name, "domain_id": self.domain_id}
 
-        self.transaction.method = 'list'
+        self.transaction.method = "list"
         domain_config_svc = DomainConfigService(transaction=self.transaction)
         domain_config_vos, total_count = domain_config_svc.list(params.copy())
         DomainConfigsInfo(domain_config_vos, total_count)
@@ -172,24 +151,20 @@ class TestDomainConfigService(unittest.TestCase):
         self.assertIsInstance(domain_config_vos[0], DomainConfig)
         self.assertEqual(total_count, 1)
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_list_domain_configs_by_tag(self, *args):
-        DomainConfigFactory(tags={'tag_key_1': 'tag_value_1'}, domain_id=self.domain_id)
+        DomainConfigFactory(tags={"tag_key_1": "tag_value_1"}, domain_id=self.domain_id)
         domain_config_vos = DomainConfigFactory.build_batch(9, domain_id=self.domain_id)
         list(map(lambda vo: vo.save(), domain_config_vos))
 
         params = {
-            'query': {
-                'filter': [{
-                    'k': 'tags.tag_key_1',
-                    'v': 'tag_value_1',
-                    'o': 'eq'
-                }]
+            "query": {
+                "filter": [{"k": "tags.tag_key_1", "v": "tag_value_1", "o": "eq"}]
             },
-            'domain_id': self.domain_id
+            "domain_id": self.domain_id,
         }
 
-        self.transaction.method = 'list'
+        self.transaction.method = "list"
         domain_config_svc = DomainConfigService(transaction=self.transaction)
         domain_config_vos, total_count = domain_config_svc.list(params.copy())
         DomainConfigsInfo(domain_config_vos, total_count)
@@ -198,63 +173,53 @@ class TestDomainConfigService(unittest.TestCase):
         self.assertIsInstance(domain_config_vos[0], DomainConfig)
         self.assertEqual(total_count, 1)
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_stat_domain_configs(self, *args):
-        domain_config_vos = DomainConfigFactory.build_batch(10, domain_id=self.domain_id)
+        domain_config_vos = DomainConfigFactory.build_batch(
+            10, domain_id=self.domain_id
+        )
         list(map(lambda vo: vo.save(), domain_config_vos))
 
         params = {
-            'domain_id': self.domain_id,
-            'query': {
-                'aggregate': [{
-                    'group': {
-                        'keys': [{
-                            'key': 'name',
-                            'name': 'Name'
-                        }],
-                        'fields': [{
-                            'operator': 'count',
-                            'name': 'Count'
-                        }]
-                    }
-                }, {
-                    'sort': {
-                        'key': 'Count',
-                        'desc': True
-                    }
-                }]
-            }
+            "domain_id": self.domain_id,
+            "query": {
+                "aggregate": [
+                    {
+                        "group": {
+                            "keys": [{"key": "name", "name": "Name"}],
+                            "fields": [{"operator": "count", "name": "Count"}],
+                        }
+                    },
+                    {"sort": {"key": "Count", "desc": True}},
+                ]
+            },
         }
 
-        self.transaction.method = 'stat'
+        self.transaction.method = "stat"
         domain_config_svc = DomainConfigService(transaction=self.transaction)
         values = domain_config_svc.stat(params)
         StatisticsInfo(values)
 
-        print_data(values, 'test_stat_domain_configs')
+        print_data(values, "test_stat_domain_configs")
 
-    @patch.object(MongoModel, 'connect', return_value=None)
+    @patch.object(MongoModel, "connect", return_value=None)
     def test_stat_domain_configs_distinct(self, *args):
-        domain_config_vos = DomainConfigFactory.build_batch(10, domain_id=self.domain_id)
+        domain_config_vos = DomainConfigFactory.build_batch(
+            10, domain_id=self.domain_id
+        )
         list(map(lambda vo: vo.save(), domain_config_vos))
 
         params = {
-            'domain_id': self.domain_id,
-            'query': {
-                'distinct': 'name',
-                'page': {
-                    'start': 2,
-                    'limit': 3
-                }
-            }
+            "domain_id": self.domain_id,
+            "query": {"distinct": "name", "page": {"start": 2, "limit": 3}},
         }
 
-        self.transaction.method = 'stat'
+        self.transaction.method = "stat"
         domain_config_svc = DomainConfigService(transaction=self.transaction)
         values = domain_config_svc.stat(params)
         StatisticsInfo(values)
 
-        print_data(values, 'test_stat_domain_configs_distinct')
+        print_data(values, "test_stat_domain_configs_distinct")
 
 
 if __name__ == "__main__":

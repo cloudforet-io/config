@@ -12,44 +12,72 @@ class UserConfig(BaseAPI, user_config_pb2_grpc.UserConfigServicer):
     def create(self, request, context):
         params, metadata = self.parse_request(request, context)
 
-        with self.locator.get_service(UserConfigService, metadata) as user_config_service:
-            return self.locator.get_info(UserConfigInfo, user_config_service.create(params))
+        with self.locator.get_service(
+            UserConfigService, metadata
+        ) as user_config_service:
+            return self.locator.get_info(
+                UserConfigInfo, user_config_service.create(params)
+            )
 
     def update(self, request, context):
         params, metadata = self.parse_request(request, context)
 
-        with self.locator.get_service(UserConfigService, metadata) as user_config_service:
-            return self.locator.get_info(UserConfigInfo, user_config_service.update(params))
+        with self.locator.get_service(
+            UserConfigService, metadata
+        ) as user_config_service:
+            return self.locator.get_info(
+                UserConfigInfo, user_config_service.update(params)
+            )
 
     def set(self, request, context):
         params, metadata = self.parse_request(request, context)
 
-        with self.locator.get_service(UserConfigService, metadata) as user_config_service:
-            return self.locator.get_info(UserConfigInfo, user_config_service.set(params))
+        with self.locator.get_service(
+            UserConfigService, metadata
+        ) as user_config_service:
+            return self.locator.get_info(
+                UserConfigInfo, user_config_service.set(params)
+            )
 
     def delete(self, request, context):
         params, metadata = self.parse_request(request, context)
 
-        with self.locator.get_service(UserConfigService, metadata) as user_config_service:
+        with self.locator.get_service(
+            UserConfigService, metadata
+        ) as user_config_service:
             user_config_service.delete(params)
             return self.locator.get_info(EmptyInfo)
 
     def get(self, request, context):
         params, metadata = self.parse_request(request, context)
 
-        with self.locator.get_service(UserConfigService, metadata) as user_config_service:
-            return self.locator.get_info(UserConfigInfo, user_config_service.get(params))
+        with self.locator.get_service(
+            UserConfigService, metadata
+        ) as user_config_service:
+            return self.locator.get_info(
+                UserConfigInfo, user_config_service.get(params)
+            )
 
     def list(self, request, context):
         params, metadata = self.parse_request(request, context)
 
-        with self.locator.get_service(UserConfigService, metadata) as user_config_service:
+        with self.locator.get_service(
+            UserConfigService, metadata
+        ) as user_config_service:
             user_config_vos, total_count = user_config_service.list(params)
-            return self.locator.get_info(UserConfigsInfo, user_config_vos,
-                                         total_count, minimal=self.get_minimal(params))
+            return self.locator.get_info(
+                UserConfigsInfo,
+                user_config_vos,
+                total_count,
+                minimal=self.get_minimal(params),
+            )
 
     def stat(self, request, context):
         params, metadata = self.parse_request(request, context)
 
-        with self.locator.get_service(UserConfigService, metadata) as user_config_service:
-            return self.locator.get_info(StatisticsInfo, user_config_service.stat(params))
+        with self.locator.get_service(
+            UserConfigService, metadata
+        ) as user_config_service:
+            return self.locator.get_info(
+                StatisticsInfo, user_config_service.stat(params)
+            )
