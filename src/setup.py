@@ -3,7 +3,7 @@
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at 
+#   You may obtain a copy of the License at
 #
 #       http://www.apache.org/licenses/LICENSE-2.0
 #
@@ -14,22 +14,19 @@
 #   limitations under the License.
 
 import os
+
 from setuptools import setup, find_packages
 
 setup(
-    name='spaceone-config',
-    version=os.environ.get('PACKAGE_VERSION'),
-    description='SpaceONE config service',
-    long_description='',
-    url='https://www.spaceone.dev/',
-    author='MEGAZONE SpaceONE Team',
-    author_email='admin@spaceone.dev',
-    license='Apache License 2.0',
+    name="spaceone-config",
+    version=os.environ.get("PACKAGE_VERSION"),
+    description="SpaceONE config service",
+    long_description="",
+    url="https://www.spaceone.dev/",
+    author="MEGAZONE SpaceONE Team",
+    author_email="admin@spaceone.dev",
+    license="Apache License 2.0",
     packages=find_packages(),
-    install_requires=[
-        'spaceone-core',
-        'spaceone-api',
-        'mongoengine'
-    ],
+    install_requires=["spaceone-core", "spaceone-api", "mongoengine", "mongomock"],
     zip_safe=False,
 )

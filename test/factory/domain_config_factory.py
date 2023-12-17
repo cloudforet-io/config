@@ -9,13 +9,8 @@ class DomainConfigFactory(factory.mongoengine.MongoEngineFactory):
         model = DomainConfig
 
     name = factory.LazyAttribute(lambda o: utils.random_string())
-    data = {
-        'key': 'value',
-        'key2': {
-            'key3': 'value3'
-        }
-    }
-    tags = {'tag_key': 'tag_value'}
-    domain_id = utils.generate_id('domain')
-    updated_at = factory.Faker('date_time')
-    created_at = factory.Faker('date_time')
+    data = {"key": "value", "key2": {"key3": "value3"}}
+    tags = {"tag_key": "tag_value"}
+    domain_id = utils.generate_id("domain")
+    updated_at = factory.Faker("date_time")
+    created_at = factory.Faker("date_time")
