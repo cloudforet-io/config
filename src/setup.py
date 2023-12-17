@@ -14,6 +14,7 @@
 #   limitations under the License.
 
 import os
+
 from setuptools import setup, find_packages
 
 setup(
@@ -26,6 +27,6 @@ setup(
     author_email="admin@spaceone.dev",
     license="Apache License 2.0",
     packages=find_packages(),
-    install_requires=["spaceone-core", "spaceone-api", "mongoengine"],
+    install_requires=["spaceone-core", "spaceone-api", "mongoengine", "mongomock"],
     zip_safe=False,
 )

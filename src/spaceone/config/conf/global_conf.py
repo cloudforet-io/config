@@ -1,3 +1,4 @@
+# Database Settings
 DATABASE_AUTO_CREATE_INDEX = True
 DATABASES = {
     "default": {
@@ -9,6 +10,7 @@ DATABASES = {
     }
 }
 
+# Cache Settings
 CACHES = {
     "default": {},
     "local": {
@@ -18,4 +20,19 @@ CACHES = {
     },
 }
 
-HANDLERS = {}
+# Handler Settings
+HANDLERS = {
+    # "authentication": [{
+    #     "backend": "spaceone.core.handler.authentication_handler:SpaceONEAuthenticationHandler"
+    # }],
+    # "authorization": [{
+    #     "backend": "spaceone.core.handler.authorization_handler:SpaceONEAuthorizationHandler"
+    # }],
+    # "mutation": [{
+    #     "backend": "spaceone.core.handler.mutation_handler:SpaceONEMutationHandler"
+    # }],
+    # "event": []
+}
+
+# Connector Settings
+CONNECTORS = {}
