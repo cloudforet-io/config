@@ -1,3 +1,1 @@
 spaceone-api
-mongoengine
-mongomock
