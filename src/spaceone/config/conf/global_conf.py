@@ -36,3 +36,6 @@ HANDLERS = {
 
 # Connector Settings
 CONNECTORS = {}
+
+# System Token Settings
+TOKEN = ""
