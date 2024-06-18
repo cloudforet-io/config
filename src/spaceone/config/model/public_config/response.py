@@ -4,13 +4,17 @@ from pydantic import BaseModel
 
 from spaceone.core import utils
 
-__all__ = ["WorkspaceConfigResponse", "WorkspaceConfigsResponse"]
+from spaceone.config.model.public_config.request import ResourceGroup
+
+__all__ = ["PublicConfigResponse", "PublicConfigsResponse"]
 
 
-class WorkspaceConfigResponse(BaseModel):
+class PublicConfigResponse(BaseModel):
     name: Union[str, None] = None
     data: Union[dict, None] = None
     tags: Union[dict, None] = None
+    resource_group: Union[ResourceGroup, None] = None
+    project_id: Union[str, None] = None
     workspace_id: Union[str, None] = None
     domain_id: Union[str, None] = None
     created_at: Union[datetime, None] = None
@@ -23,6 +27,6 @@ class WorkspaceConfigResponse(BaseModel):
         return data
 
 
-class WorkspaceConfigsResponse(BaseModel):
-    results: List[WorkspaceConfigResponse] = []
+class PublicConfigsResponse(BaseModel):
+    results: List[PublicConfigResponse] = []
     total_count: int
