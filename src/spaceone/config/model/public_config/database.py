@@ -4,7 +4,7 @@ from spaceone.core.model.mongo_model import MongoModel
 
 
 class PublicConfig(MongoModel):
-    name = StringField(max_length=255, unique_with=["domain_id"])
+    name = StringField(max_length=255, unique_with=["domain_id", "workspace_id", "project_id"])
     data = DictField()
     tags = DictField()
     resource_group = StringField(max_length=40, choices=("DOMAIN", "WORKSPACE", "PROJECT"))
