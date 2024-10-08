@@ -39,3 +39,17 @@ CONNECTORS = {}
 
 # System Token Settings
 TOKEN = ""
+
+# Default Domain Unified Cost Configuration
+DEFAULT_UNIFIED_COST_CONFIG = {
+
+    "run_hour": 0,
+    "aggregation_day": 15,
+    "is_last_day": False,
+    "exchange_source": "Yahoo Finance!",
+    "exchange_date": 15,
+    "is_exchange_last_day": False,
+    "exchange_rate_mode": "AUTO",
+    # "custom_exchange_rate": {},
+    "currency": "KRW",
+}
