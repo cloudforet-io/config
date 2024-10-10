@@ -2,7 +2,6 @@ import logging
 
 from spaceone.core.service import *
 
-from spaceone.core import config
 from spaceone.config.manager.domain_config_manager import DomainConfigManager
 from spaceone.config.model import DomainConfig
 
@@ -118,14 +117,9 @@ class DomainConfigService(BaseService):
             domain_config_vo (object)
         """
 
-        domain_config_vo = self.domain_config_mgr.get_domain_config(
+        return self.domain_config_mgr.get_domain_config(
             params["name"], params["domain_id"]
         )
-
-        if domain_config_vo.name == "settings":
-            domain_config_vo = self._get_config_vo_with_default_unified_cost_config(domain_config_vo)
-
-        return domain_config_vo
 
     @transaction(permission="config:DomainConfig.read", role_types=["DOMAIN_ADMIN"])
     @check_required(["domain_id"])
@@ -168,11 +162,3 @@ class DomainConfigService(BaseService):
 
         query = params.get("query", {})
         return self.domain_config_mgr.state_domain_configs(query)
-
-    def _get_config_vo_with_default_unified_cost_config(self, domain_config_vo) -> DomainConfig:
-        domain_config_data: dict = domain_config_vo.data
-        if not domain_config_data.get("unified_cost_config", {}):
-            domain_config_data["unified_cost_config"] = config.get_global("DEFAULT_UNIFIED_COST_CONFIG", {})
-            domain_config_vo = self.domain_config_mgr.update_domain_config_by_vo({"data": domain_config_data},
-                                                                                 domain_config_vo)
-        return domain_config_vo
