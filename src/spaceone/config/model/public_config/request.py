@@ -7,6 +7,7 @@ __all__ = [
     "PublicConfigSetRequest",
     "PublicConfigDeleteRequest",
     "PublicConfigGetRequest",
+    "PublicConfigGetAccessibleConfigRequest",
     "PublicConfigSearchQueryRequest",
     "PublicConfigQueryRequest",
 ]
@@ -58,6 +59,12 @@ class PublicConfigGetRequest(BaseModel):
     user_projects: Union[list, None] = None
     project_id: Union[list, str, None] = None
     workspace_id: Union[list, str, None] = None
+    domain_id: str
+
+
+class PublicConfigGetAccessibleConfigRequest(BaseModel):
+    query: Union[dict, None] = None
+    name: Union[str, None] = None
     domain_id: str
 
 

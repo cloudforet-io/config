@@ -115,6 +115,84 @@ class PublicConfigService(BaseService):
     #         )
     #     return PublicConfigResponse(**public_config_vo.to_dict())
 
+    @transaction(permission="config:PublicConfig.read",
+                 role_types=["DOMAIN_ADMIN", "WORKSPACE_OWNER", "WORKSPACE_MEMBER"])
+    @change_value_by_rule("APPEND", "workspace_id", "*")
+    @change_value_by_rule("APPEND", "project_id", "*")
+    @convert_model
+    def get(self, params: PublicConfigGetRequest) -> Union[PublicConfigResponse, dict]:
+        """Get workspace config
+
+        Args:
+            params (dict): {
+                'name': 'str',        # required
+                'user_projects': 'list',
+                'project_id': 'str',
+                'workspace_id': 'str' # injected from auth
+                'domain_id': 'str'    # injected from auth
+            }
+
+        Returns:
+            public_config_vo (object)
+        """
+
+        public_config_vo = self.public_config_mgr.get_public_config(params.name, params.domain_id, params.workspace_id,
+                                                                    params.user_projects)
+
+        return PublicConfigResponse(**public_config_vo.to_dict())
+
+    @transaction(permission="config:PublicConfig.read", role_types=["USER"])
+    @convert_model
+    def get_accessible_configs(self, params: PublicConfigGetAccessibleConfigRequest) -> Union[
+        PublicConfigsResponse, dict]:
+        """Get accessible workspace config
+
+        Args:
+            params (dict): {
+                "query": "dict",
+                'name': 'str',        # required
+
+                'domain_id': 'str'    # injected from auth
+            }
+
+        Returns:
+            public_config_vo (object)
+        """
+
+        query = params.query or {}
+        if "filter" not in query:
+            query["filter"] = []
+
+        query_filter = [
+            {
+                "key": "domain_id",
+                "value": params.domain_id,
+                "operator": "eq"
+            },
+            {
+                "key": "resource_group",
+                "value": "DOMAIN",
+                "operator": "eq"
+            }
+        ]
+
+        query["filter"].extend(query_filter)
+
+        if params.name:
+            query["filter"].append({
+                "key": "name    ",
+                "value": params.name,
+                "operator": "eq"
+            })
+
+        _LOGGER.debug(f'[get_accessible_configs] query: {query}')
+
+        public_config_vos, total_count = self.public_config_mgr.list_public_configs(query)
+
+        public_configs_info = [public_config_vo.to_dict() for public_config_vo in public_config_vos]
+
+        return PublicConfigsResponse(results=public_configs_info, total_count=total_count)
+
     @transaction(permission="config:PublicConfig.write",
                  role_types=["DOMAIN_ADMIN", "WORKSPACE_OWNER", "WORKSPACE_MEMBER"])
     @convert_model
@@ -143,34 +221,10 @@ class PublicConfigService(BaseService):
 
     @transaction(permission="config:PublicConfig.read",
                  role_types=["DOMAIN_ADMIN", "WORKSPACE_OWNER", "WORKSPACE_MEMBER"])
-    @convert_model
-    def get(self, params: PublicConfigGetRequest) -> Union[PublicConfigResponse, dict]:
-        """Get workspace config
-
-        Args:
-            params (dict): {
-                'name': 'str',        # required
-                'user_projects': 'list',
-                'project_id': 'str',
-                'workspace_id': 'str' # injected from auth
-                'domain_id': 'str'    # injected from auth
-            }
-
-        Returns:
-            public_config_vo (object)
-        """
-
-        public_config_vo = self.public_config_mgr.get_public_config(params.name, params.domain_id, params.workspace_id,
-                                                                    params.user_projects)
-
-        return PublicConfigResponse(**public_config_vo.to_dict())
-
-    @transaction(permission="config:PublicConfig.read",
-                 role_types=["DOMAIN_ADMIN", "WORKSPACE_OWNER", "WORKSPACE_MEMBER"])
-    @append_query_filter(["name", "domain_id"])
     @append_keyword_filter(["name"])
     @change_value_by_rule("APPEND", "workspace_id", "*")
     @change_value_by_rule("APPEND", "project_id", "*")
+    @append_query_filter(["name", "workspace_id", "users_project", "domain_id"])
     @convert_model
     def list(self, params: PublicConfigSearchQueryRequest) -> Union[PublicConfigsResponse, dict]:
         """List workspace configs
@@ -191,12 +245,14 @@ class PublicConfigService(BaseService):
 
         query = params.query or {}
         public_config_vos, total_count = self.public_config_mgr.list_public_configs(query)
-        workspaces_info = [public_config_vo.to_dict() for public_config_vo in public_config_vos]
-        return PublicConfigsResponse(results=workspaces_info, total_count=total_count)
+        public_configs_info = [public_config_vo.to_dict() for public_config_vo in public_config_vos]
+        return PublicConfigsResponse(results=public_configs_info, total_count=total_count)
 
     @transaction(permission="config:PublicConfig.read",
                  role_types=["DOMAIN_ADMIN", "WORKSPACE_OWNER", "WORKSPACE_MEMBER"])
-    @append_query_filter(["workspace_id", "domain_id"])
+    @change_value_by_rule("APPEND", "workspace_id", "*")
+    @change_value_by_rule("APPEND", "project_id", "*")
+    @append_query_filter(["users_project", "workspace_id", "domain_id"])
     @append_keyword_filter(["name"])
     @convert_model
     def stat(self, params: PublicConfigQueryRequest) -> dict:
