@@ -180,7 +180,7 @@ class PublicConfigService(BaseService):
 
         if params.name:
             query["filter"].append({
-                "key": "name    ",
+                "key": "name",
                 "value": params.name,
                 "operator": "eq"
             })
