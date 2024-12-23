@@ -4,14 +4,19 @@ from pydantic import BaseModel
 
 from spaceone.core import utils
 
-__all__ = ["PublicConfigResponse", "PublicConfigsResponse"]
+from spaceone.config.model.shared_config.request import ResourceGroup
+
+__all__ = ["SharedConfigResponse", "SharedConfigsResponse"]
 
 
-class PublicConfigResponse(BaseModel):
+class SharedConfigResponse(BaseModel):
     name: Union[str, None] = None
     data: Union[dict, None] = None
     tags: Union[dict, None] = None
+    resource_group: Union[ResourceGroup, None] = None
     domain_id: Union[str, None] = None
+    workspace_id: Union[str, None] = None
+    project_id: Union[str, None] = None
     created_at: Union[datetime, None] = None
     updated_at: Union[datetime, None] = None
 
@@ -22,6 +27,6 @@ class PublicConfigResponse(BaseModel):
         return data
 
 
-class PublicConfigsResponse(BaseModel):
-    results: List[PublicConfigResponse]
+class SharedConfigsResponse(BaseModel):
+    results: List[SharedConfigResponse]
     total_count: int

@@ -1,7 +1,7 @@
 import logging
-from typing import Tuple, Union
-
+from typing import Tuple
 from mongoengine import QuerySet
+
 from spaceone.core.manager import BaseManager
 
 from spaceone.config.model.public_config.database import PublicConfig
@@ -15,7 +15,7 @@ class PublicConfigManager(BaseManager):
         self.public_config_model = PublicConfig
 
     def create_public_config(self, params: dict) -> PublicConfig:
-        def _rollback(vo: PublicConfig) -> None:
+        def _rollback(vo: PublicConfig):
             _LOGGER.info(
                 f"[create_public_config._rollback] " f"Delete public config : {vo.name}"
             )
@@ -27,7 +27,7 @@ class PublicConfigManager(BaseManager):
         return public_config_vo
 
     def update_public_config_by_vo(
-            self, params: dict, public_config_vo: PublicConfig
+        self, params: dict, public_config_vo: PublicConfig
     ) -> PublicConfig:
         def _rollback(old_data: dict):
             _LOGGER.info(
@@ -39,24 +39,15 @@ class PublicConfigManager(BaseManager):
 
         return public_config_vo.update(params)
 
-    @staticmethod
-    def delete_public_config_by_vo(public_config_vo: PublicConfig) -> None:
+    def delete_public_config_by_vo(self, public_config_vo: PublicConfig) -> None:
         public_config_vo.delete()
 
-    def get_public_config(self, name: str, domain_id: str, workspace_id: Union[list, str, None],
-                          project_id: Union[list, str, None]) -> PublicConfig:
-        conditions = {
-            "name": name,
-            "domain_id": domain_id,
-        }
-        if workspace_id:
-            conditions["workspace_id"] = workspace_id
-        if project_id:
-            conditions["project_id"] = project_id
+    def get_public_config(self, name: str, domain_id: str) -> PublicConfig:
+        return self.public_config_model.get(
+            name=name, domain_id=domain_id
+        )
 
-        return self.public_config_model.get(**conditions)
-
-    def filter_public_configs(self, **conditions):
+    def filter_public_configs(self, **conditions) -> QuerySet:
         return self.public_config_model.filter(**conditions)
 
     def list_public_configs(self, query: dict) -> Tuple[QuerySet, int]:

@@ -2,47 +2,47 @@ from typing import Union
 from pydantic import BaseModel
 
 __all__ = [
-    "PublicConfigCreateRequest",
-    "PublicConfigUpdateRequest",
-    "PublicConfigSetRequest",
-    "PublicConfigDeleteRequest",
-    "PublicConfigGetRequest",
-    "PublicConfigSearchQueryRequest",
+    "DomainConfigCreateRequest",
+    "DomainConfigUpdateRequest",
+    "DomainConfigSetRequest",
+    "DomainConfigDeleteRequest",
+    "DomainConfigGetRequest",
+    "DomainConfigSearchQueryRequest",
 ]
 
 
-class PublicConfigCreateRequest(BaseModel):
+class DomainConfigCreateRequest(BaseModel):
     name: str
     data: dict
     tags: Union[dict, None] = None
     domain_id: str
 
 
-class PublicConfigUpdateRequest(BaseModel):
+class DomainConfigUpdateRequest(BaseModel):
     name: str
     data: Union[dict, None] = None
     tags: Union[dict, None] = None
     domain_id: str
 
 
-class PublicConfigSetRequest(BaseModel):
+class DomainConfigSetRequest(BaseModel):
     name: str
     data: dict
     tags: Union[dict, None] = None
     domain_id: str
 
 
-class PublicConfigDeleteRequest(BaseModel):
+class DomainConfigDeleteRequest(BaseModel):
     name: str
     domain_id: str
 
 
-class PublicConfigGetRequest(BaseModel):
+class DomainConfigGetRequest(BaseModel):
     name: str
     domain_id: str
 
 
-class PublicConfigSearchQueryRequest(BaseModel):
+class DomainConfigSearchQueryRequest(BaseModel):
     query: Union[dict, None] = None
     name: Union[str, None] = None
     domain_id: str
