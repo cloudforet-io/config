@@ -38,20 +38,8 @@ class PublicConfig(BaseAPI, public_config_pb2_grpc.PublicConfigServicer):
         response: dict = public_config_svc.get(params)
         return self.dict_to_message(response)
 
-    def get_accessible_configs(self, request, context):
-        params, metadata = self.parse_request(request, context)
-        public_config_svc = PublicConfigService(metadata)
-        response: dict = public_config_svc.get_accessible_configs(params)
-        return self.dict_to_message(response)
-
     def list(self, request, context):
         params, metadata = self.parse_request(request, context)
         public_config_svc = PublicConfigService(metadata)
         response: dict = public_config_svc.list(params)
-        return self.dict_to_message(response)
-
-    def stat(self, request, context):
-        params, metadata = self.parse_request(request, context)
-        public_config_svc = PublicConfigService(metadata)
-        response: dict = public_config_svc.stat(params)
         return self.dict_to_message(response)

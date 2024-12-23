@@ -1,8 +1,7 @@
 from spaceone.api.config.v1 import domain_config_pb2, domain_config_pb2_grpc
 from spaceone.core.pygrpc import BaseAPI
+
 from spaceone.config.service.domain_config_service import DomainConfigService
-from spaceone.config.info.domain_config_info import *
-from spaceone.config.info.common_info import *
 
 
 class DomainConfig(BaseAPI, domain_config_pb2_grpc.DomainConfigServicer):
@@ -11,73 +10,36 @@ class DomainConfig(BaseAPI, domain_config_pb2_grpc.DomainConfigServicer):
 
     def create(self, request, context):
         params, metadata = self.parse_request(request, context)
-
-        with self.locator.get_service(
-            DomainConfigService, metadata
-        ) as domain_config_service:
-            return self.locator.get_info(
-                DomainConfigInfo, domain_config_service.create(params)
-            )
+        domain_config_svc = DomainConfigService(metadata)
+        response: dict = domain_config_svc.create(params)
+        return self.dict_to_message(response)
 
     def update(self, request, context):
         params, metadata = self.parse_request(request, context)
-
-        with self.locator.get_service(
-            DomainConfigService, metadata
-        ) as domain_config_service:
-            return self.locator.get_info(
-                DomainConfigInfo, domain_config_service.update(params)
-            )
+        domain_config_svc = DomainConfigService(metadata)
+        response: dict = domain_config_svc.update(params)
+        return self.dict_to_message(response)
 
     def set(self, request, context):
         params, metadata = self.parse_request(request, context)
-
-        with self.locator.get_service(
-            DomainConfigService, metadata
-        ) as domain_config_service:
-            return self.locator.get_info(
-                DomainConfigInfo, domain_config_service.set(params)
-            )
+        domain_config_svc = DomainConfigService(metadata)
+        response: dict = domain_config_svc.set(params)
+        return self.dict_to_message(response)
 
     def delete(self, request, context):
         params, metadata = self.parse_request(request, context)
-
-        with self.locator.get_service(
-            DomainConfigService, metadata
-        ) as domain_config_service:
-            domain_config_service.delete(params)
-            return self.locator.get_info(EmptyInfo)
+        domain_config_svc = DomainConfigService(metadata)
+        domain_config_svc.delete(params)
+        return self.empty()
 
     def get(self, request, context):
         params, metadata = self.parse_request(request, context)
-
-        with self.locator.get_service(
-            DomainConfigService, metadata
-        ) as domain_config_service:
-            return self.locator.get_info(
-                DomainConfigInfo, domain_config_service.get(params)
-            )
+        domain_config_svc = DomainConfigService(metadata)
+        response: dict = domain_config_svc.get(params)
+        return self.dict_to_message(response)
 
     def list(self, request, context):
         params, metadata = self.parse_request(request, context)
-
-        with self.locator.get_service(
-            DomainConfigService, metadata
-        ) as domain_config_service:
-            domain_config_vos, total_count = domain_config_service.list(params)
-            return self.locator.get_info(
-                DomainConfigsInfo,
-                domain_config_vos,
-                total_count,
-                minimal=self.get_minimal(params),
-            )
-
-    def stat(self, request, context):
-        params, metadata = self.parse_request(request, context)
-
-        with self.locator.get_service(
-            DomainConfigService, metadata
-        ) as domain_config_service:
-            return self.locator.get_info(
-                StatisticsInfo, domain_config_service.stat(params)
-            )
+        domain_config_svc = DomainConfigService(metadata)
+        response: dict = domain_config_svc.list(params)
+        return self.dict_to_message(response)

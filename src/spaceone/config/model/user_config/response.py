@@ -4,14 +4,15 @@ from pydantic import BaseModel
 
 from spaceone.core import utils
 
-__all__ = ["PublicConfigResponse", "PublicConfigsResponse"]
+__all__ = ["UserConfigResponse", "UserConfigsResponse"]
 
 
-class PublicConfigResponse(BaseModel):
+class UserConfigResponse(BaseModel):
     name: Union[str, None] = None
     data: Union[dict, None] = None
     tags: Union[dict, None] = None
     domain_id: Union[str, None] = None
+    user_id: Union[str, None] = None
     created_at: Union[datetime, None] = None
     updated_at: Union[datetime, None] = None
 
@@ -22,6 +23,6 @@ class PublicConfigResponse(BaseModel):
         return data
 
 
-class PublicConfigsResponse(BaseModel):
-    results: List[PublicConfigResponse]
+class UserConfigsResponse(BaseModel):
+    results: List[UserConfigResponse]
     total_count: int
