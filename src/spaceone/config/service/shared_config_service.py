@@ -12,6 +12,7 @@ from spaceone.config.model.shared_config.request import *
 _LOGGER = logging.getLogger(__name__)
 
 
+
 @authentication_handler
 @authorization_handler
 @mutation_handler
