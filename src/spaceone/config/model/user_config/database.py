@@ -13,7 +13,7 @@ class UserConfig(MongoModel):
     updated_at = DateTimeField(auto_now=True)
 
     meta = {
-        "updatable_fields": ["name", "data", "tags"],
+        "updatable_fields": ["name", "data", "tags", "updated_at"],
         "minimal_fields": ["name"],
         "ordering": ["name"],
         "indexes": [
