@@ -18,7 +18,7 @@ import os
 from setuptools import setup, find_packages
 
 setup(
-    name="spaceone-config",
+    name="spaceone_config",
     version=os.environ.get("PACKAGE_VERSION"),
     description="SpaceONE config service",
     long_description="",
